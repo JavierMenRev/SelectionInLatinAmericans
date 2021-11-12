@@ -17,10 +17,17 @@ Process the 1KP VCF for chr22 only:
 ```
 bcftools view ALL.chr22.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz \
 -S PEL_REFs_tokeep.txt -Ou | bcftools view -m2 -M2 -v snps -Ou | \
+bcftools view -e 'COUNT(GT="AA")=N_SAMPLES || COUNT(GT="RR")=N_SAMPLES' -Ou | \
 bcftools norm -d snps -Ov > PEL_REFs.chr22.vcf
 ```
 
-Convert the VCF file to Chromopainter (CP) format:
+Convert the VCF file to Chromopainter (CP) format to run AdaptMix:
+
+```
+VCF2CP.pl PEL_REFs_clean.chr22.vcf
+```
+
+Convert the VCF file to PLINK format to run ADMIXTURE:
 
 ```
 VCF2CP.pl PEL_REFs_clean.chr22.vcf

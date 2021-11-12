@@ -15,9 +15,9 @@ For this tutorial we are going to use genomic data from Peruvians (`PEL`) from t
 Process the 1KP VCF for chr22 only:
 
 ```
-bcftools view --force-samples ALL.chr22.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz \
--S inds/AMR_YRI_tokeep.txt -Ou | bcftools view -m2 -M2 -v snps -Ou | \
-bcftools norm -d snps -Ov > PEL_REFs_clean.chr22.vcf
+bcftools view ALL.chr22.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz \
+-S inds/PEL_REFs_tokeep.txt -Ou | bcftools view -m2 -M2 -v snps -Ou | \
+bcftools norm -d snps -Ov > PEL_REFs.chr22.vcf
 ```
 
 Convert the VCF file to Chromopainter (CP) format:

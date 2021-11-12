@@ -16,7 +16,7 @@ Process the 1KP VCF for chr22 only:
 
 ```
 bcftools view ALL.chr22.phase3_shapeit2_mvncall_integrated_v5.20130502.genotypes.vcf.gz \
--S inds/PEL_REFs_tokeep.txt -Ou | bcftools view -m2 -M2 -v snps -Ou | \
+-S PEL_REFs_tokeep.txt -Ou | bcftools view -m2 -M2 -v snps -Ou | \
 bcftools norm -d snps -Ov > PEL_REFs.chr22.vcf
 ```
 

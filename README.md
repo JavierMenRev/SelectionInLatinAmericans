@@ -32,7 +32,9 @@ bcftools view PEL_REFs.chr22.vcf -T PEL_REFs_100KSNPs.chr22.txt -Ov > PEL_REFs_s
 Convert the VCF file to Chromopainter (CP) format to run AdaptMix:
 
 ```
-plink2 --vcf PEL_REFs_small.chr22.vcf --export hapslegend --out PEL_REFs_small.chr22
+plink2 --vcf PEL_REFs_small.chr22.vcf --export haps --out PEL_REFs_small.chr22
+perl impute2chromopainter2.pl PEL_REFs_small.chr22.haps genetic_map_chr22_combined_b37.20140701.txt PEL_REFs_small.chr22.chromopainter
+gzip PEL_REFs_small.chr22.chromopainter.haps
 ```
 
 Convert the VCF file to PLINK format to run ADMIXTURE:

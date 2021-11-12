@@ -44,10 +44,12 @@ plink --vcf PEL_REFs_small.chr22.vcf --make-bed --out PEL_REFs_small.chr22
 ```
 
 ## Run ADMIXTURE 
-Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate this using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2). If using ADMIXTURE it's also recommended to prune your data before.
+Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate this using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2). 
 
 ```
-./admixture PEL_REFs_small.chr22.bed 3
+plink --bfile PEL_REFs_small.chr22 --indep-pairwise 50 5 0.2 --out PEL_REFs_small.chr22
+plink --bfile PEL_REFs_small.chr22 --extract PEL_REFs_small.chr22.prune.in --make-bed --out PEL_REFs_small_pruned.chr22
+./admixture PEL_REFs_small_pruned.chr22.bed 3
 ```
 
 ## Run AdaptMix

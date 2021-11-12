@@ -40,12 +40,16 @@ gzip PEL_REFs_small.chr22.chromopainter.haps
 Convert the VCF file to PLINK format to run ADMIXTURE:
 
 ```
-VCF2CP.pl PEL_REFs_clean.chr22.vcf
+plink --vcf PEL_REFs_small.chr22.vcf --make-bed --out PEL_REFs_small.chr22
 ```
 
+## Run ADMIXTURE 
+Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate this using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2). If using ADMIXTURE it's also recommended to prune your data before.
+
 ```
-Rscript compute_mr_sprime.R test.sprime.score Denisova_chr22.gtformat Vindija_chr22.gtformat > test.sprime.matchrates.txt
+./admixture PEL_REFs_small.chr22.bed 3
 ```
+
 ## Run AdaptMix
 
 ```

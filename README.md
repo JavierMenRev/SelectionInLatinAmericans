@@ -92,5 +92,7 @@ Line 3 contains the header of the output file:
 * 17 - LRT.pval.insurr.source2.target.1 (LRT for SNP being selected in reference population 2)
 * 18 - LRT.pval.insurr.source3.target.1 (LRT for SNP being selected in reference population 3)
 
+Note that depending on the number of target/reference population used the number of columns will be different from that shown here.
+
 ## Citation
 Mendoza-Revilla Javier et al. "Disentangling signatures of selection before and after European colonization in Latin Americans." 

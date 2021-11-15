@@ -1,11 +1,9 @@
 # Selection in Latin Americans
 This repository contains the scripts used to detect and classify signals of selection in Latin Americans published in Mendoza-Revilla Javier et al. 2021
 
-## Modules needed
+## Modules used
 * R/4.0.2
 * plink/1.90b6.16
-* tabix/0.2.6
-* samtools/1.10
 * vcftools/0.1.16
 * plink2/2.00a2
 * perl/5.30.1

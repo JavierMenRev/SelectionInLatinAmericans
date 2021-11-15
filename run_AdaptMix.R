@@ -3,49 +3,30 @@
 
 ## Normal lik doesn't work particularly well with alt.drift=0 -- really favors SNPs near fixation
 
-##########################
-## WD
-# setwd("/Volumes/Vanuatu2/Javier/UCL/Selection-6/")
-
 ############################
 ## INPUT:
+temp <- commandArgs(TRUE)
+pop.vec <- as.character(temp[1])
+geno.filePRE <- as.character(temp[2])
+geno.filePOST <- as.character(temp[3])
+id.file <- as.character(temp[4])
+admixture.props.file <- as.character(temp[5])
+admixture.inds.file <- as.character(temp[6])
+surrogate.vec <- as.character(temp[7])
+out.file <- as.character(temp[8])
 
-temp=commandArgs(TRUE)
-target.pop=as.character(temp[1])
 
-add.on='BetaBinomInferredDriftPValII'
+## PARAMETERS
 lik.calc='betabinom'           ## 'betabinom' or 'normal' likelihoods?
 alt.drift=1
-if (alt.drift==1) add.on=paste(add.on,"ALT",sep='')
-if (lik.calc=='normal') add.on=paste(add.on,"NormalLik",sep='')
-# out.file=paste("results/",target.pop,"_",data.type,"_",add.on,"_v2.txt",sep='')
-out.file=paste("results/bbadapt/",target.pop,"_",add.on,".txt",sep='') ## I just want to check the drift -- should be the same as v2
-
-pop.vec=target.pop   ## tested pops
-surrogate.vec=c("Africans","Europeans","NativeAmericans")     ## surrogate pops  (!!!! MUST BE IN ORDER OF ADMIXTURE COLUMNS !!!!)
-
-## get CP and ID files
-id.file=paste0("./data/idfiles/",target.pop,"_CANDELA_NAM_EUR_AFR_CHB_GBR_geno_0.05_mind0.05_intersect_maf0.05.idfile")
-geno.filePRE="./data/CPformatData/CANDELA_NAM_EUR_AFR_CHB_GBR_geno_0.05_mind0.05_intersect_chr"
-geno.filePOST=".chromopainter.haps.gz"
 
 nsnps.perrun=400000         ## TO CONTROL RAM
 chromo.vec=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22")
-# chromo.vec=c("21","22")
 round.val=3     ## for AIC
 round.val.sel=3     ## for sel-coeff
 round.val.freq=4     ## for allele frequencies (observed and expected)
+surrogate.vec <- strsplit(surrogate.vec,",")[[1]]
 
-## ADMIXTURE DATA or SourceFIND DATA
-admixture.props.file="./results/admixture_supervised/CANDELA_NAM_EUR_AFR_CHB_GBR_geno_0.05_mind0.05_intersect_maf0.05_pruned.3.Q"
-admixture.inds.file="./results/admixture_supervised/CANDELA_NAM_EUR_AFR_CHB_GBR_geno_0.05_mind0.05_intersect_maf0.05_pruned.fam"
-
-## REMOVE INDS WITH EURO ANCESTRY FROM NON-IBERIAN POPS BASED ON SOURCEFIND?: 
-#nonIberian.pops=""
-# nonIberian.pops=c("NorthWestEurope","NorthEastEurope")   ## ",Italy"
-nonIberian.pops=c("")   ## ",Italy"
-sourcefind.props.file="./data/globetrotter_sourcefind_combined.csv"
- 
 ##############################
 ## PROGRAM:
 
@@ -89,18 +70,6 @@ is.element.vec=(is.element(id.mat[,2],pop.vec) & as.integer(id.mat[,3])==1 & is.
 ## grab donor individuals
 is.element.donor.vec=(is.element(id.mat[,2],surrogate.vec) & as.integer(id.mat[,3])==1)
 
-                                   ## (II) GET SOURCEFIND PROPS AND REMOVE INDS FROM TARGET (IF NECESSARY):
-if (nonIberian.pops[1]!="")
-{
-	sourcefind.props.read=read.csv(sourcefind.props.file,sep=',',header=T,as.is=T)
-	sourcefind.props.all=matrix(as.matrix(sourcefind.props.read[,18:dim(sourcefind.props.read)[2]]),ncol=dim(sourcefind.props.read)[2]-17)
-	rownames(sourcefind.props.all)=as.character(sourcefind.props.read[,1])
-	colnames(sourcefind.props.all)=names(sourcefind.props.read)[18:dim(sourcefind.props.read)[2]]
-	target.index=id.mat[,1][is.element(id.mat[,2],pop.vec)]
-	match.target=match(target.index,rownames(sourcefind.props.all))
-	inds.to.remove=target.index[!is.na(match.target)][apply(sourcefind.props.all[match.target[!is.na(match.target)],match(nonIberian.pops,colnames(sourcefind.props.all))],1,sum)>=0.001]
-	if (length(inds.to.remove)>0) is.element.vec[match(inds.to.remove,id.mat[,1])]=F
-}
 
                          ## (III) GET SURROGATE ALLELE FREQS:
 nsites.tot=0
@@ -130,7 +99,7 @@ for (i in 1:length(chromo.vec))
 	chromo.vec.final[start.snp:end.snp]=chromo.vec[i]
 	###rs.vec.final[start.snp:end.snp]=rs.vec.geno[chromo.vec.geno==chromo.vec[i]][match(overlap.set,pos.vec.i)]
 	pos.vec.final[start.snp:end.snp]=pos.vec
-	print(c("SURR-FREQ",i,length(chromo.vec),length(pos.vec),nsites.tot,start.snp,end.snp))
+	# print(c("SURR-FREQ",i,length(chromo.vec),length(pos.vec),nsites.tot,start.snp,end.snp))
 	for (j in 1:dim(id.mat)[1])
 	{
 		hap1=as.integer(strsplit(scan(readfile,nlines=1,what='char',quiet=TRUE),split='')[[1]])
@@ -169,6 +138,8 @@ log.betabinom.drift.est.func=function(x,n.vec,x.vec,p.vec,alt.drift)
 	}
 	return(-sum(log.betabinom.calc(n=n.vec,x=x.vec,alpha=p.vec*(1-drift.vector)/drift.vector,beta.val=(1.0-p.vec)*(1-drift.vector)/drift.vector)))
 }
+
+
 drift.start=0.1
 drift.est=rep(NA,length(pop.vec))
 for (k in 1:length(pop.vec))
@@ -180,7 +151,6 @@ for (k in 1:length(pop.vec))
 	if (lik.calc=="normal") drift.est[k]=exp(optim(par=log(drift.start),log.normal.drift.est.func,obs.vec=obs.count[k,],mu.vec=2*c(matrix(apply(admixture.props.k,2,sum),nrow=1)%*%surrogate.freq.all),p.vec=freq.vec,alt.drift=alt.drift,method="Nelder-Mead")$par)
 	if (lik.calc!="normal") drift.est[k]=exp(optim(par=log(drift.start),log.betabinom.drift.est.func,n.vec=2*sum(id.mat[,2][is.element.vec]==pop.vec[k]),x.vec=obs.count[k,],p.vec=freq.vec,alt.drift=alt.drift,method="Nelder-Mead")$par)
 }
-drift.est
 
                          ## (V) TEST EACH SNP FOR SELECTION (I.E. DEVIATIONS FROM NEUTRALITY):
 pval.mat=matrix(NA,nrow=length(pop.vec),ncol=nsites.tot)
@@ -239,7 +209,7 @@ for (i in 1:length(chromo.vec))
 	start.snp=snp.count+1
 	end.snp=snp.count+length(pos.vec)
 	snp.count=snp.count+length(pos.vec)
-	print(c("SCORING",i,length(chromo.vec),length(pos.vec),nsites.tot,start.snp,end.snp))
+	# print(c("SCORING",i,length(chromo.vec),length(pos.vec),nsites.tot,start.snp,end.snp))
 	close(readfile)
 	nsites.i=length(pos.vec)
 	num.runs=ceiling(nsites.i/nsnps.perrun)
@@ -248,7 +218,7 @@ for (i in 1:length(chromo.vec))
 		start.snp.a=(a-1)*nsnps.perrun+1
 		end.snp.a=a*nsnps.perrun
 		if (end.snp.a > nsites.i) end.snp.a=nsites.i
-		print(c(a,num.runs,start.snp.a,end.snp.a))
+		# print(c(a,num.runs,start.snp.a,end.snp.a))
 		readfile=gzfile(paste(geno.filePRE,chromo.vec[i],geno.filePOST,sep=''),open='r')
 		line2=scan(readfile,nlines=1,what='char',quiet=TRUE)   ## ninds
 		line2=scan(readfile,nlines=1,what='char',quiet=TRUE)   ## nsites
@@ -314,10 +284,5 @@ to.print.mat=NULL
 for (k in 1:length(pop.vec)) to.print.mat=cbind(to.print.mat,round(pval.mat[k,],round.val),round(obs.count[k,]/(2*sum(id.mat[is.element.vec,2]==pop.vec[k])),round.val.freq),round(exp.freq.pop.k[k,],round.val.freq),round(AIC.neutral[k,],round.val),round(AIC.postadmix[k,],round.val),round(t(AIC.insurr[k,,]),round.val),round(selfac.postadmix[k,],round.val.sel),round(t(selfac.insurr[k,,]),round.val.sel),round(LRT.postadmix[k,],round.val),round(t(LRT.insurr[k,,]),round.val))
 write.table(cbind(chromo.vec.final,pos.vec.final,to.print.mat),file=out.file,row.names=F,col.names=F,quote=F,append=TRUE)	
 
-warnings()
-
-drift.est
-table(id.mat[is.element.vec,2])
-table(id.mat[is.element.donor.vec,2])
 
 q(save='no')

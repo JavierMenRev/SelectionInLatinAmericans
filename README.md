@@ -35,6 +35,7 @@ do
 
   perl impute2chromopainter2.pl \
   PEL_REFs_ALLCHR_20K_chr${chr}.haps genetic_map_chr${chr}_combined_b37.20140701.txt PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter
+  gzip PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter.haps
 
 done
 ```

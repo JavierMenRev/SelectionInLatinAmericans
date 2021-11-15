@@ -33,7 +33,7 @@ We will also need an id file to run `AdaptMix`. This file simply contains the in
 Rscript make_id_file.R PEL_REFs_ALLCHR_20K_chr1.sample PEL_REFs_ids.txt > PEL_REFs_ALLCHR_20K.ids.txt
 ```
 
-The PEL_REFs_ids.txt contains the individual id in column 1 and the population id in column 2. We then convert the VCF file to PLINK format to run ADMIXTURE (output will be needed to run AdaptMix later):
+The PEL_REFs_ids.txt contains the individual id in column 1 and the population id in column 2. The script also assumes all individuals will be used in the analysis. We then convert the VCF file to PLINK format to run ADMIXTURE (output will be needed to run AdaptMix later):
 
 ```
 plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K

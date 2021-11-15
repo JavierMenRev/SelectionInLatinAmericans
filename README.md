@@ -11,7 +11,7 @@ This repository contains the scripts used to detect and classify signals of sele
 * perl/5.30.1
 
 ## Preparing files
-Our new software, `AdaptMix`, uses genotype data in ChromoPainter format. For a description of the file format see: https://people.maths.bris.ac.uk/~madjl/finestructure-old/chromopainter_info.html.
+Our new software, `AdaptMix`, uses genotype data in ChromoPainter (CP) format. For a description of the file format see: https://people.maths.bris.ac.uk/~madjl/finestructure-old/chromopainter_info.html.
 
 For this tutorial we are going to use genomic data from Peruvians (`PEL`) from the 1000 Genomes Project (1KGP) as our target admixed population, and `CHB`, `IBS`, and `YRI` as our reference populations. Note that we are using `CHB` as a proxy for the Native American reference population.
 
@@ -28,14 +28,7 @@ bcftools view -e 'COUNT(GT="AA")=N_SAMPLES || COUNT(GT="RR")=N_SAMPLES' -Ou | \
 bcftools norm -d snps -Ov > PEL_REFs_ALLCHR_20K.vcf
 ```
 
-Grab only 100K SNPs to make this tutorial run quicker:
-
-```
-bcftools query -f '%CHROM\t%POS\n' PEL_REFs.chr22.vcf | shuf -n 100000 | sort -n > PEL_REFs_100KSNPs.chr22.txt
-bcftools view PEL_REFs.chr22.vcf -T PEL_REFs_100KSNPs.chr22.txt -Ov > PEL_REFs_small.chr22.vcf
-```
-
-Convert the VCF file to Chromopainter (CP) format to run AdaptMix:
+Convert the VCF file to CP format to run AdaptMix:
 
 ```
 plink2 --vcf PEL_REFs_small.chr22.vcf --export haps --out PEL_REFs_small.chr22

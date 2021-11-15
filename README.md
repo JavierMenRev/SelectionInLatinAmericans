@@ -11,7 +11,9 @@ This repository contains the scripts used to detect and classify signals of sele
 * perl/5.30.1
 
 ## Preparing files
-`AdaptMix` uses the ChromoPainter (CP) file format as input. We provide a script to prepare your data starting from a VCF file. The VCF file contains data from Peruvians (`PEL`) from the 1000 Genomes Project (1KGP) as our target admixed population, and `CHB`, `IBS`, and `YRI` as our reference populations. Note that we are using `CHB` as a proxy for the Native American reference population.
+`AdaptMix` uses the ChromoPainter (CP) file format as input. We provide a script to prepare your data starting from a VCF file. 
+
+The example VCF file contains data from Peruvians (`PEL`) from the 1000 Genomes Project (1KGP) as our target admixed population, and `CHB`, `IBS`, and `YRI` as our reference populations. Note that we are using `CHB` as a proxy for the Native American reference population.
 
 We fist split the VCF files by chromosomes, convert the VCF to haps/sample format, and lastly to CP format:
 
@@ -40,7 +42,7 @@ plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
 ```
 
 ## Run ADMIXTURE 
-Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate this using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2). We can run ADMIXTURE setting the K parameter to 3:
+Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate this using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2).
 
 ```
 ./admixture PEL_REFs_ALLCHR_20K.bed 3
@@ -49,8 +51,20 @@ Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but yo
 ## Run AdaptMix
 
 ```
-Rscript compute_mr_sprime.R test.sprime.score Denisova_chr22.gtformat Vindija_chr22.gtformat > test.sprime.matchrates.txt
+Rscript run_AdaptMix.R PEL PEL_REFs_ALLCHR_20K_chr .chromopainter.haps.gz PEL_REFs_ALLCHR_20K.ids.txt PEL_REFs_ALLCHR_20K.3.Q PEL_REFs_ALLCHR_20K.fam CHB,IBS,YRI PEL_REFs_ALLCHR_20K_adaptmix.txt 
 ```
+
+Input arguments:
+
+1 - Population ID of the targed admixed population
+2 - Prefix of CP file
+3 - Postfix of CP file
+4 - ID file
+5 - Q file from ADMIXTURE (or any other software) 
+6 - Fam file from PLINK used to run ADMIXTURE (ids should be the same order as the Q file)
+7 - Reference population IDs separated by a comma (the order of the reference population should match the ancestries i.e. columns in the ADMIXTURE file)
+8 - Output file
+
 
 ## Citation
 Mendoza-Revilla Javier et al. "Disentangling signatures of selection before and after European colonization in Latin Americans." 

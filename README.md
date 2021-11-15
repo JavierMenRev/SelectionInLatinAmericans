@@ -66,8 +66,8 @@ Rscript run_AdaptMix.R PEL PEL_REFs_ALLCHR_20K_chr .chromopainter.haps.gz PEL_RE
 Input arguments:
 
 * 1 - Population ID of the targed admixed population
-* 2 - Prefix of CP file
-* 3 - Postfix of CP file
+* 2 - Prefix of CP file (before "chr" string in file)
+* 3 - Postfix of CP file (after "chr" string in file)
 * 4 - ID file
 * 5 - Q file from ADMIXTURE (or any other software) 
 * 6 - Fam file from PLINK used to run ADMIXTURE (ids should be the same order as the Q file)

@@ -28,7 +28,7 @@ do
 done
 ```
 
-We will also need an id file to run `AdaptMix`. This file has three columns:
+We will also need an id file to run `AdaptMix`. This file contains three columns:
 * 1 - Population ID
 * 2 - Individual ID
 * 3 - Flag 1 or 0 whether to include the individual in the analysis or not

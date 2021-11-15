@@ -23,7 +23,7 @@ do
 done
 ```
 
-Alternatively, if the data is in haps/sample (SHAPEIT) format, we can convert to CP using `impute2chromopainter2.pl`. We show this by first converting the VCF file to haps/sample file using plink2.
+Alternatively, if the data is in haps/sample (SHAPEIT) format, we can convert to CP using `impute2chromopainter2.pl`. We show this by first converting the VCF file to haps/sample file using `plink2`.
 
 ```
 for chr in {1..22}

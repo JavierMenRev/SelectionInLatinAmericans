@@ -59,7 +59,7 @@ Rscript run_AdaptMix.R PEL PEL_REFs_ALLCHR_20K_chr .chromopainter.haps.gz PEL_RE
 ```
 
 Input arguments:
-* 1 - Population ID of the targed admixed population
+* 1 - Population ID of the target admixed population
 * 2 - Prefix of CP file (before "chr" string in file)
 * 3 - Postfix of CP file (after "chr" string in file)
 * 4 - ID file
@@ -70,14 +70,14 @@ Input arguments:
 
 Output:
 
-The first two lines indicate the population ID of the target admixed population and the drift estimate.
+The first two lines indicate the ID of the target admixed population and the drift estimate.
 Line 3 contains the header of the output file:
 
 * 1 - chrom (chromosome ID)
 * 2 - pos (position in base pair)
 * 3 - log10.pval.target.1 (-log10 P-value)
-* 4 - obs.freq.target.1 (observed allele frequency in the targed admixed population)
-* 5 - exp.freq.target.1 (expected allele frequency in the targed admixed population)
+* 4 - obs.freq.target.1 (observed allele frequency in the target admixed population)
+* 5 - exp.freq.target.1 (expected allele frequency in the target admixed population)
 * 6 - AIC.neutral.target.1 (AIC for SNP being neutral)
 * 7 - AIC.postadmix.target.1 (AIC for SNP being selected post-admixture)
 * 8 - AIC.insurr.source1target.1 (AIC for SNP being selected in reference population 1)

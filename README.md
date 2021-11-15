@@ -80,23 +80,14 @@ Line 3 contains the header of the output file:
 * 8 - AIC.insurr.source1target.1 (AIC for SNP being selected in reference population 1)
 * 9 - AIC.insurr.source2target.1 (AIC for SNP being selected in reference population 2)
 * 10 - AIC.insurr.source3target.1 (AIC for SNP being selected in reference population 3)
-* 11 - sel.postadmix.target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected post-admixture)
-* 12 - sel.insurr.source1target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected in reference population 1)
-* 13 - sel.insurr.source2target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected in reference population 2)
-* 14 - sel.insurr.source3target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected in reference population 3)
-* 15 - LRT.pval.postadmix.target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected post-admixture)
-* 16 - LRT.pval.insurr.source1.target.1 
-* 17 - LRT.pval.insurr.source2.target.1 
-* 18 LRT.pval.insurr.source3.target.1
-
-
-
-
-
-
-
-
-
+* 11 - sel.postadmix.target.1 (selection coefficient for SNP being selected post-admixture)
+* 12 - sel.insurr.source1target.1 (selection coefficient for SNP being selected in reference population 1)
+* 13 - sel.insurr.source2target.1 (selection coefficient for SNP being selected in reference population 2)
+* 14 - sel.insurr.source3target.1 (selection coefficient for SNP being selected in reference population 3)
+* 15 - LRT.pval.postadmix.target.1 (LRT for SNP being selected post-admixture)
+* 16 - LRT.pval.insurr.source1.target.1 (LRT for SNP being selected in reference population 1)
+* 17 - LRT.pval.insurr.source2.target.1 (LRT for SNP being selected in reference population 2)
+* 18 - LRT.pval.insurr.source3.target.1 (LRT for SNP being selected in reference population 3)
 
 ## Citation
 Mendoza-Revilla Javier et al. "Disentangling signatures of selection before and after European colonization in Latin Americans." 

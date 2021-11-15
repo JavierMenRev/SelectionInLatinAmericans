@@ -13,7 +13,7 @@ This repository contains the scripts used to detect and classify signals of sele
 ## Preparing files
 For this tutorial on how to use `AdaptMix` we are going to use genomic data from Peruvians (`PEL`) from the 1000 Genomes Project (1KGP) as our target admixed population, and `CHB`, `IBS`, and `YRI` as our reference populations. Note that we are using `CHB` as a proxy for the Native American reference population.
 
-Process the 1KGP VCF (merged file with ALL chromsomes), extract 20K random SNPs, and remove monomorphic sites:
+We first process the 1KGP VCF (merged file with ALL chromsomes), extract 20K random SNPs, and remove monomorphic sites:
 
 ```
 bcftools query -f '%CHROM\t%POS\n' ALL.chrALL.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes2.vcf.gz \
@@ -26,7 +26,7 @@ bcftools view -e 'COUNT(GT="AA")=N_SAMPLES || COUNT(GT="RR")=N_SAMPLES' -Ou | \
 bcftools norm -d snps -Ov > PEL_REFs_ALLCHR_20K.vcf
 ```
 
-Convert the VCF file to ChromoPainter (CP) format to run AdaptMix. You usually get CP files after phasing your data with e.g. `SHAPEIT`. We are going to illustrate how to get CP files from `haps` files by transforming our VCFs to `haps` files using `plink2`. Note that we do this by chromosomes:
+We then convert the VCF to ChromoPainter (CP) format to run AdaptMix. You usually get CP files after phasing your data with e.g. `SHAPEIT`. We are going to illustrate how to get CP files from `haps` files by transforming our VCFs to `haps` files using `plink2`. Note that we do this by chromosomes:
 
 ```
 for chr in {1..22}
@@ -40,10 +40,10 @@ done
 
 ```
 
-Convert the VCF file to PLINK format to run ADMIXTURE:
+We also convert the VCF file to PLINK format to run ADMIXTURE:
 
 ```
-plink --vcf PEL_REFs_small.chr22.vcf --make-bed --out PEL_REFs_small.chr22
+plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
 ```
 
 ## Run ADMIXTURE 

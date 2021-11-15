@@ -28,6 +28,7 @@ do
 done
 ```
 
+
 We will also need an id file to run `AdaptMix`. This file contains three columns:
 * 1 - Population ID
 * 2 - Individual ID
@@ -36,6 +37,7 @@ We will also need an id file to run `AdaptMix`. This file contains three columns
 ```
 Rscript make_id_file.R PEL_REFs_ALLCHR_20K_chr1.sample PEL_REFs_ids.txt > PEL_REFs_ALLCHR_20K.ids.txt
 ```
+
 
 We will lastly convert the VCF file to PLINK format to run ADMIXTURE (output will be needed to run `AdaptMix`):
 

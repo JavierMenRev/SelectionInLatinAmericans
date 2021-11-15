@@ -40,6 +40,13 @@ do
 done
 ```
 
+We will also need an `id` file to run `AdaptMix`. This file simply contains the individual id (column 1), population id (column 2), and a 1 or 0 flag that indicates whether to include the individual in the analysis or not (column 3). We can simply process the sample file which has the individuals in the same order as our CP files:
+
+```
+Rscript make_id_file.R PEL_REFs_ALLCHR_20K_chr1.sample 
+```
+
+
 We also convert the VCF file to PLINK format to run ADMIXTURE:
 
 ```

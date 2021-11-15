@@ -11,6 +11,32 @@ This repository contains the scripts used to detect and classify signals of sele
 * perl/5.30.1
 
 ## Preparing files
+`AdaptMix` uses the ChromoPainter (CP) file format as input. We provide a script to prepare your data starting from a VCF file. The VCF file contained data from Peruvians (`PEL`) from the 1000 Genomes Project (1KGP) as our target admixed population, and `CHB`, `IBS`, and `YRI` as our reference populations. Note that we are using `CHB` as a proxy for the Native American reference population.
+
+We fist split the VCF files by chromosomes, convert the VCF to haps/sample (SHAPEIT2 format), and lastly to CP format:
+
+```
+for chr in {1..22}
+do
+  ./plink2 --vcf PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --export haps --out PEL_REFs_ALLCHR_20K_chr${chr}
+
+  perl impute2chromopainter2.pl \
+  PEL_REFs_ALLCHR_20K_chr${chr}.haps genetic_map_chr${chr}_combined_b37.20140701.txt PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter
+  gzip PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter.haps
+
+done
+```
+
+Please separate your data by chromosome.
+The data needs to be phased. This can be done, for instance, using SHAPEIT2.
+You can convert from vcf to haps/sample using this function and from hap/legend/sample to haps/sample using this function.
+We provide a script to prepare your data under 
+
+
+Relate uses the haps/sample file format (output file format of SHAPEIT2) as input. 
+
+Our new model, 
+
 For this tutorial on how to use `AdaptMix` we are going to use genomic data from Peruvians (`PEL`) from the 1000 Genomes Project (1KGP) as our target admixed population, and `CHB`, `IBS`, and `YRI` as our reference populations. Note that we are using `CHB` as a proxy for the Native American reference population.
 
 We first process the 1KGP VCF (merged file with ALL chromsomes), extract 20K random SNPs, and remove monomorphic sites:

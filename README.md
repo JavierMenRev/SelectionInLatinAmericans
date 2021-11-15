@@ -66,6 +66,37 @@ Input arguments:
 * 7 - Reference population IDs separated by a comma (the order of the reference population should match the ancestries i.e. columns in the ADMIXTURE file)
 * 8 - Output file
 
+Output:
+The first two lines indicate the population ID of the target admixed population and the drift estimate.
+Line 3 contains the header of the output file:
+
+* 1 - chrom (chromosome ID)
+* 2 - pos (position in base pair)
+* 3 - log10.pval.target.1 (-log10 P-value)
+* 4 - obs.freq.target.1 (observed allele frequency in the targed admixed population)
+* 5 - exp.freq.target.1 (expected allele frequency in the targed admixed population)
+* 6 - AIC.neutral.target.1 (AIC for SNP being neutral)
+* 7 - AIC.postadmix.target.1 (AIC for SNP being selected post-admixture)
+* 8 - AIC.insurr.source1target.1 (AIC for SNP being selected in reference population 1)
+* 9 - AIC.insurr.source2target.1 (AIC for SNP being selected in reference population 2)
+* 10 - AIC.insurr.source3target.1 (AIC for SNP being selected in reference population 3)
+* 11 - sel.postadmix.target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected post-admixture)
+* 12 - sel.insurr.source1target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected in reference population 1)
+* 13 - sel.insurr.source2target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected in reference population 2)
+* 14 - sel.insurr.source3target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected in reference population 3)
+* 15 - LRT.pval.postadmix.target.1 (selection coefficient in selection strenght times number of generation units assuming SNP is selected post-admixture)
+* 16 - LRT.pval.insurr.source1.target.1 
+* 17 - LRT.pval.insurr.source2.target.1 
+* 18 LRT.pval.insurr.source3.target.1
+
+
+
+
+
+
+
+
+
 
 ## Citation
 Mendoza-Revilla Javier et al. "Disentangling signatures of selection before and after European colonization in Latin Americans." 

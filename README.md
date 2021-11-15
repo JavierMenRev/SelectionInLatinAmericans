@@ -69,6 +69,7 @@ Input arguments:
 * 8 - Output file
 
 Output:
+
 The first two lines indicate the population ID of the target admixed population and the drift estimate.
 Line 3 contains the header of the output file:
 

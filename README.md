@@ -37,7 +37,6 @@ do
   PEL_REFs_ALLCHR_20K_chr${chr}.haps genetic_map_chr${chr}_combined_b37.20140701.txt PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter
 
 done
-
 ```
 
 We also convert the VCF file to PLINK format to run ADMIXTURE:
@@ -47,12 +46,10 @@ plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
 ```
 
 ## Run ADMIXTURE 
-Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate this using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2). 
+Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate this using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2). For this example we also do not prune our data as we already extracted random SNPs from the initial VCF file.
 
 ```
-plink --bfile PEL_REFs_small.chr22 --indep-pairwise 50 5 0.2 --out PEL_REFs_small.chr22
-plink --bfile PEL_REFs_small.chr22 --extract PEL_REFs_small.chr22.prune.in --make-bed --out PEL_REFs_small_pruned.chr22
-./admixture PEL_REFs_small_pruned.chr22.bed 3
+./admixture PEL_REFs_ALLCHR_20K.bed 3
 ```
 
 ## Run AdaptMix

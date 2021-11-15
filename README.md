@@ -11,11 +11,21 @@ This repository contains the scripts used to detect and classify signals of sele
 * perl/5.30.1
 
 ## Preparing files
-`AdaptMix` uses the ChromoPainter (CP) file format as input. We provide a script to prepare your data starting from a VCF file. 
+`AdaptMix` uses the ChromoPainter (CP) file format as input. We provide a script to prepare your data starting from a VCF. 
 
 The example VCF file contains data from Peruvians (`PEL`) from the 1000 Genomes Project as the target admixed population, and `CHB`, `IBS`, and `YRI` as the reference populations. Note that `CHB` is used as a proxy for the Native American reference population.
 
-We fist split the VCF files by chromosomes, convert the VCF to haps/sample format, and then to CP format:
+We fist split the VCF files by chromosomes and convert to CP format using vcf_to_chromopainter_main.R (from https://github.com/sahwa/vcf_to_chromopainter):
+
+```
+for chr in {1..22}
+do
+  vcftools --vcf PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --recode --stdout | gzip -c > PEL_REFs_chr${chr}_20K.vcf.gz 
+  vcf_to_chromopainter_main.R -g PEL_REFs_chr${chr}_20K.vcf.gz -o PEL_REFs_chr${chr}_20K.chromopainter.haps -u F
+done
+```
+
+Alternatively, if the data is in haps/sample (SHAPEIT) format, we can convert to CP using `impute2chromopainter2.pl`. We show this by first converting the VCF file to haps/sample file using plink2.
 
 ```
 for chr in {1..22}

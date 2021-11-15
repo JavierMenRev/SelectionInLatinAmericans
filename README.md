@@ -17,7 +17,6 @@ The example VCF file contains data from Peruvians (`PEL`) from the 1000 Genomes 
 
 We fist split the VCF files by chromosomes, convert the VCF to haps/sample format, and then to CP format:
 
-
 ```
 for chr in {1..22}
 do
@@ -29,17 +28,16 @@ do
 done
 ```
 
-
-We will also need an id file to run `AdaptMix`. This file simply contains the individual id (column 1), population id (column 2), and a 1 or 0 flag that indicates whether to include the individual in the analysis or not (column 3). We can process the sample file which has the individuals in the same order as our CP files with the following `R` script:
-
+We will also need an id file to run `AdaptMix`. This file has three columns:
+* 1 - Population ID
+* 2 - Individual ID
+* 3 - Flag 1 or 0 whether to include the individual in the analysis or not
 
 ```
 Rscript make_id_file.R PEL_REFs_ALLCHR_20K_chr1.sample PEL_REFs_ids.txt > PEL_REFs_ALLCHR_20K.ids.txt
 ```
 
-
-The PEL_REFs_ids.txt contains the individual id in column 1 and the population id in column 2. The script also assumes all individuals will be used in the analysis. We then convert the VCF file to PLINK format to run ADMIXTURE (output will be needed to run AdaptMix later):
-
+We will lastly convert the VCF file to PLINK format to run ADMIXTURE (output will be needed to run `AdaptMix`):
 
 ```
 plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
@@ -48,22 +46,17 @@ plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
 ## Run ADMIXTURE 
 Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate these proportions using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2).
 
-
 ```
 ./admixture PEL_REFs_ALLCHR_20K.bed 3
 ```
 
-
 ## Run AdaptMix
-
 
 ```
 Rscript run_AdaptMix.R PEL PEL_REFs_ALLCHR_20K_chr .chromopainter.haps.gz PEL_REFs_ALLCHR_20K.ids.txt PEL_REFs_ALLCHR_20K.3.Q PEL_REFs_ALLCHR_20K.fam CHB,IBS,YRI PEL_REFs_ALLCHR_20K_adaptmix.txt 
 ```
 
-
 Input arguments:
-
 * 1 - Population ID of the targed admixed population
 * 2 - Prefix of CP file (before "chr" string in file)
 * 3 - Postfix of CP file (after "chr" string in file)

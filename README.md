@@ -18,7 +18,7 @@ ADMIXTURE Q file:
 Each row is an individual and columns represent the proportions for each ancestry.
 
 PLINK FAM file:
-Sample information file (accompanying a .bed and .bim file) used to run ADMIXTURE.
+Sample information file used to run ADMIXTURE.
 
 ## Run AdaptMix
 

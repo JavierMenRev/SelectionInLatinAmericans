@@ -38,7 +38,7 @@ Input arguments:
 * reference_pop_id_1,...,reference_pop_id_n - Reference population IDs separated by a comma (the order should MATCH the ancestries in the ADMIXTURE Q file)
 * output_file - Output file
 
-Using the `examples` you can run `AdaptMix` as follows:
+Using the `examples` files you can run `AdaptMix` as follows:
 
 ```
 Rscript run_AdaptMix.R PEL PEL_REFs_ALLCHR_20K_chr .chromopainter.haps.gz PEL_REFs_ALLCHR_20K.ids.txt PEL_REFs_ALLCHR_20K.3.Q PEL_REFs_ALLCHR_20K.fam CHB,IBS,YRI PEL_REFs_ALLCHR_20K_adaptmix.txt 

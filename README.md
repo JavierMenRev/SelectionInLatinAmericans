@@ -29,14 +29,20 @@ Rscript run_AdaptMix.R [target_admixed_pop_id] [prefix_HAPS_file] [postfix_HAPS_
 ```
 
 Input arguments:
-* 1: target_admixed_pop_id - Population ID of the target admixed population
-* 2: prefix_HAPS_file Prefix of CP file (before "chr" string in file)
-* 3: postfix_HAPS_file - Postfix of CP file (after "chr" string in file)
-* 4: ID_file - ID file
-* 5: ADMIXTURE_Q_file - Q file from ADMIXTURE (or any other software) 
-* 6: PLINK_FAM_FILE - Fam file from PLINK used to run ADMIXTURE (ids should be the same order as the Q file)
-* 7: reference_pop_id_1,...,reference_pop_id_n - Reference population IDs separated by a comma (the order of the reference population should MATCH the ancestries i.e. columns in the ADMIXTURE Q file)
-* 8: output_file - Output file
+* target_admixed_pop_id - Population ID of the target admixed population
+* prefix_HAPS_file Prefix of CP file (before "chr" string in file)
+* postfix_HAPS_file - Postfix of CP file (after "chr" string in file)
+* ID_file - ID file
+* ADMIXTURE_Q_file - Q file from ADMIXTURE (or any other software) 
+* PLINK_FAM_FILE - Fam file from PLINK used to run ADMIXTURE (ids should be the same order as the Q file)
+* reference_pop_id_1,...,reference_pop_id_n - Reference population IDs separated by a comma (the order should MATCH the ancestries in the ADMIXTURE Q file)
+* output_file - Output file
+
+Using the `examples` you can run `AdaptMix` as follows:
+
+```
+Rscript run_AdaptMix.R PEL PEL_REFs_ALLCHR_20K_chr .chromopainter.haps.gz PEL_REFs_ALLCHR_20K.ids.txt PEL_REFs_ALLCHR_20K.3.Q PEL_REFs_ALLCHR_20K.fam CHB,IBS,YRI PEL_REFs_ALLCHR_20K_adaptmix.txt 
+```
 
 Output:
 

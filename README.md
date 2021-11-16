@@ -41,7 +41,7 @@ Input arguments:
 Using the `examples` files you can run `AdaptMix` as follows:
 
 ```
-Rscript run_AdaptMix.R PEL PEL_REFs_ALLCHR_20K_chr .chromopainter.haps.gz PEL_REFs_ALLCHR_20K.ids.txt PEL_REFs_ALLCHR_20K.3.Q PEL_REFs_ALLCHR_20K.fam CHB,IBS,YRI PEL_REFs_ALLCHR_20K_adaptmix.txt 
+Rscript run_AdaptMix.R PEL PEL_REFs_ALLCHR_chr .chromopainter.haps.gz PEL_REFs_ALLCHR.ids.txt PEL_REFs_ALLCHR.3.Q PEL_REFs_ALLCHR.fam CHB,IBS,YRI PEL_REFs_ALLCHR_adaptmix.txt 
 ```
 
 Output:

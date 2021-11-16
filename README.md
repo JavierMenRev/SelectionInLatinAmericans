@@ -25,7 +25,7 @@ Sample information file used to run ADMIXTURE.
 The `AdaptMix` command line is as follows:
 
 ```
-Rscript run_AdaptMix.R [target_admixed_pop_id] [prefix_HAPS_file] [postfix_HAPS_file] [ID_file] [ADMIXTURE_Q_file] [PLINK_FAM_FILE] [reference_pop_id_1,...,reference_pop_id_n] [output_file] 
+Rscript run_AdaptMix.R [target_admixed_pop_id] [prefix_HAPS_file] [postfix_HAPS_file] [ID_file] [ADMIXTURE_Q_file] [PLINK_FAM_FILE] [ref_pop_id_1,...,ref_pop_id_n] [output_file] 
 ```
 
 Input arguments:

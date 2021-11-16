@@ -3,13 +3,18 @@ This repository contains the scripts used to detect and classify signals of sele
 
 ## Modules used
 * R/4.0.2
-* plink/1.90b6.16
-* vcftools/0.1.16
-* plink2/2.00a2
 * perl/5.30.1
 
 ## Preparing files
-`AdaptMix` uses the ChromoPainter (CP) file format as input. We provide a script to prepare your data starting from a VCF. 
+`AdaptMix` uses the ChromoPainter's (CP) PHASE and ID files as input. 
+
+PHASE file:
+fdfdf dfd fdfdfd fd
+
+ID file:
+Each row is ordered to match the rows of the PHASE input file. There are three columns per row, with the first row giving the individual identifier, the second column giving the individual's population label and the third column an indicator for whether the individual should not be included in the analysis (use "0" to specify NOT to include the given individual.
+
+
 
 The example VCF file contains data from Peruvians (`PEL`) from the 1000 Genomes Project as the target admixed population, and `CHB`, `IBS`, and `YRI` as the reference populations. Note that `CHB` is used as a proxy for the Native American reference population.
 

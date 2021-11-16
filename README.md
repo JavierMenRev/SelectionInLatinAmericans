@@ -6,13 +6,14 @@ This repository contains the scripts used to detect and classify signals of sele
 * perl/5.30.1
 
 ## Preparing files
-`AdaptMix` uses the ChromoPainter's (CP) PHASE and ID files as input. 
+`AdaptMix` uses several files as input. 
 
-PHASE file:
-fdfdf dfd fdfdfd fd
+ChromoPainter's PHASE file:
+The first line of the file contains the number of reference (donors) haplotypes. The second line of the file contains the total number of donor and recipient
+individuals. The third line contains the letter “P” followed by a vector of the basepair positions of each SNP. The remaining lines of the file contain the genetic variation information of each donor and recipient haplotype, with each row a new haplotype and each column the allelic type at each biallelic SNP, in the same order as the "positions" line.
 
-ID file:
-Each row is ordered to match the rows of the PHASE input file. There are three columns per row, with the first row giving the individual identifier, the second column giving the individual's population label and the third column an indicator for whether the individual should not be included in the analysis (use "0" to specify NOT to include the given individual.
+ChromoPainter's ID file:
+Each row is ordered to match the rows of the PHASE input file. There are three columns per row, with the first row giving the individual identifier, the second column giving the individual's population label and the third column an indicator for whether the individual should not be included in the analysis (use "0" to specify NOT to include the given individual).
 
 
 

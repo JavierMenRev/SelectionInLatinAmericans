@@ -5,7 +5,7 @@ This repository contains the scripts used to detect and classify signals of sele
 * R/4.0.2
 
 ## Preparing files
-`AdaptMix` uses several files as input. 
+`AdaptMix` uses four files as input. 
 
 ChromoPainter's PHASE file:
 The first line of the file contains the number of reference (donors) haplotypes. The second line of the file contains the total number of donor and recipient

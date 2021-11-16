@@ -17,8 +17,8 @@ Each row is ordered to match the rows of the PHASE input file. There are three c
 ADMIXTURE Q file:
 Each row is an individual and columns represent the proportions for each ancestry.
 
-PLINK FAM file:
-Sample information file used to run ADMIXTURE.
+FAM file:
+Sample information file from PLINK used to run ADMIXTURE.
 
 ## Run AdaptMix
 

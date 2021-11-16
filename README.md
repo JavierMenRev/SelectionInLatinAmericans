@@ -3,7 +3,6 @@ This repository contains the scripts used to detect and classify signals of sele
 
 ## Modules used
 * R/4.0.2
-* perl/5.30.1
 
 ## Preparing files
 `AdaptMix` uses several files as input. 

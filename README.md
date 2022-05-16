@@ -16,7 +16,7 @@ R < run_AdaptMix.R parameter.input.file genotypes.input.filenames id.file output
 
 The first three file names are input files, described below. The last is the output file name. "screenoutput.out" saves any technical output from AdaptMix (with no results) and can be discarded.
 
-## Input File1:  parameter.input.file
+## Input File 1:  parameter.input.file
 
 The first input file contains the following 4 rows:
 pop.vec: [pop1 pop2 ... pop_K]
@@ -32,7 +32,7 @@ The third row specifies the bins of expected minor allele frequency (MAF) to use
 
 The fourth row specifies the minimum drift value, translating to the expected (minimum) difference between observed and expected allele frequencies under neutrality. For example, a value of 0.01 indicates that it is normal, assuming neutrality, to have a frequency difference of 0.01 between the observed and expected frequencies. This also helps eliminate false positives for SNPs with low minor allele frequency. Such low MAF SNPs may have low inferred drift values, so that even very small differences between observed and expected frequencies are interpreted as evidence of selection unless a mininum value is set. (Use a very small non-zero value, e.g. 0.00000001, to essentially ignore this.)
 
-## Input File2: genotypes.input.filenames
+## Input File 2: genotypes.input.filenames
 
 This file contains X rows listing the X files (and their directory locations) that contain the genotype data for each target and surrogate individual. For example, this might contain 22 rows corresponding to the 22 chromosomes. 
 
@@ -84,9 +84,7 @@ Note that we are using ADMIXTURE to estimate ancestry proportions in `PEL`, but 
 ./admixture PEL_REFs_ALLCHR_20K.bed 3
 ```
 
-#########################################
-########################################3
-## RUN AdaptMix EXAMPLE:
+## RUN AdaptMix example:
 
 ```
 R < run_AdaptMix.R example/PEL_analysis_paramfile.txt example/PEL_REFs_ALLCHR_chr.txt example/PEL_REFs.ids.txt example/PEL_REFs_ALLCHR_adaptmix.txt --no-save > screenoutput.out
@@ -98,9 +96,7 @@ Input arguments:
 * 3 - ID file
 * 4 - Output file name
 
-########################################
-#######################################
-## AdaptMix OUTPUT FILE:
+## AdaptMix output file:
 
 The first lines give the drift estimates for each target admixed population (row) for SNPs within each bin (column) as specified by "drift.maf.bin".
 

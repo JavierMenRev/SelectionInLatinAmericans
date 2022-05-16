@@ -110,6 +110,7 @@ The first lines give the drift estimates for each target admixed population (row
 
 Following this, the next line contains the header of the output file for the remaining lines, of which there is one line per SNP:
 
+```
 * 1 - chrom (chromosome ID)
 * 2 - pos (position in base pair)
 * 3 - log10.pval.target.1 (-log10 P-value, testing for any evidence of selection)
@@ -124,6 +125,7 @@ Following this, the next line contains the header of the output file for the rem
 * 12 - sel.insurr.source1target.1 (selection coefficient for SNP being selected in surrogate population 1)
 * 13 - sel.insurr.source2target.1 (selection coefficient for SNP being selected in surrogate population 2)
 * 14 - sel.insurr.source3target.1 (selection coefficient for SNP being selected in surrogate population 3)
+```
 
 Note that depending on the number of target/surrogate population used the number of columns will be different from that shown here. The above assumes 3 surrogate ("surrogate.vec") populations and one target ("pop.vec") population. 
 

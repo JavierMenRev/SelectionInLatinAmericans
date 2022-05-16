@@ -40,6 +40,14 @@ This file contains X rows listing the X files (and their directory locations) th
 
 Each of the files pointed to by "genotypes.input.filenames" should be in ChromoPainter (CP) file format as input, where individuals' haploid genomes are in rows and the columns are SNPs. The first row gives the number of haplotypes in the file, the second row gives the number of SNPs, and the third row a "P" in column 1 with remaining columns the basepair positions of each SNP. The remaining rows are individuals' haploid genomes (with no spaces), with each two consecutive rows an individual. The allowed value for each person's haploid at each SNP is {0,1,?}, where "?" denotes missing data. Though each individual is represented by two rows (i.e. two haplotypes) in CP format, haplotype information is ignored. I.e. you can randomly assign the two alleles for heterozygotes to either row of an individual.
 
+## Input File 3: id.file
+
+Finally, AdaptMix also requires an id file. This file contains 2+S columns, where S is the number of ancestral populations specified in "surrogate.vec" of the "parameter.input.file" input file above. (E.g. S may be the number of clusters K when running ADMIXTURE.) 
+
+Each row of "id.file" is a person, with column 1 containing their individual ID and column 2 containing their population ID label. These ID labels must match those provided in "pop.vec" and "surrogate.vec" of "parameter.input.file" (though not all labels in column 2 need be among "pop.vec" or "surrogate.vec"). The remaining S columns give the inferred ancestry proportions for each individual (e.g. as inferred by ADMIXTURE), with each column corresponding to the populations -- as ordered -- in surrogate.vec.
+
+## Workflow
+
 We provide a script to prepare your data starting from a VCF. The example VCF file contains data from Peruvians (PEL) from the 1000 Genomes Project as the target admixed population, and CHB, IBS, and YRI as the reference populations. Note that CHB is used as a proxy for the Native American reference population.
 
 We fist split the VCF files by chromosomes and convert to CP format using `vcf_to_chrompainter_AdaptMix.R`:
@@ -68,13 +76,7 @@ done
 
 Note that a genetic map is needed as input, but AdaptMix ignores this recombination map.
 
-## Input File 3: id.file
-
-Finally, AdaptMix also requires an id file. This file contains 2+S columns, where S is the number of ancestral populations specified in "surrogate.vec" of the "parameter.input.file" input file above. (E.g. S may be the number of clusters K when running ADMIXTURE.) 
-
-Each row of "id.file" is a person, with column 1 containing their individual ID and column 2 containing their population ID label. These ID labels must match those provided in "pop.vec" and "surrogate.vec" of "parameter.input.file" (though not all labels in column 2 need be among "pop.vec" or "surrogate.vec"). The remaining S columns give the inferred ancestry proportions for each individual (e.g. as inferred by ADMIXTURE), with each column corresponding to the populations -- as ordered -- in surrogate.vec.
-
-## Running ADMIXTURE to get ancestry proportions
+Running ADMIXTURE to get ancestry proportions:
 
 We can convert the VCF file to PLINK format to run ADMIXTURE (output will be needed to run `AdaptMix`):
 
@@ -82,7 +84,7 @@ We can convert the VCF file to PLINK format to run ADMIXTURE (output will be nee
 plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
 ```
 
-## Run ADMIXTURE 
+Run ADMIXTURE:
 
 Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate these proportions using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2).
 
@@ -90,7 +92,7 @@ Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but yo
 ./admixture PEL_REFs_ALLCHR_20K.bed 3
 ```
 
-## Run AdaptMix example
+Run AdaptMix:
 
 ```
 R < run_AdaptMix.R example/PEL_analysis_paramfile.txt example/PEL_REFs_ALLCHR_chr.txt example/PEL_REFs.ids.txt example/PEL_REFs_ALLCHR_adaptmix.txt --no-save > screenoutput.out
@@ -102,7 +104,7 @@ Input arguments:
 * 3 - ID file
 * 4 - Output file name
 
-## AdaptMix output file
+AdaptMix output file:
 
 The first lines give the drift estimates for each target admixed population (row) for SNPs within each bin (column) as specified by "drift.maf.bin".
 

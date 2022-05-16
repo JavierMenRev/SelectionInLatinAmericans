@@ -56,7 +56,7 @@ We fist split the VCF files by chromosomes and convert to CP format using `vcf_t
 for chr in {1..22}
 do
   vcftools --vcf PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --recode --stdout > PEL_REFs_chr${chr}_20K.vcf 
-  vcf_to_chrompainter_AdaptMix.R.R PEL_REFs_chr${chr}_20K PEL_REFs_chr${chr}_20K
+  vcf_to_chrompainter_AdaptMix.R PEL_REFs_chr${chr}_20K PEL_REFs_chr${chr}_20K
   gzip PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter.haps
 done
 ```

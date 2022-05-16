@@ -8,7 +8,6 @@ This repository contains the scripts used to detect and classify signals of sele
 * plink2/2.00a2
 * perl/5.30.1
 
-####################################
 ## Running AdaptMix
 
 `AdaptMix` takes four files as input, and is run from a command line in the following way, providing four file names: 

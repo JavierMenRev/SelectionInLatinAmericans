@@ -28,7 +28,7 @@ The first input file contains the following 4 rows:
 
 The first row (pop.vec) lists the target populations you wish to test for admixture in. 
 
-The second row (surrogate.vec) lists the surrogate populations that are to be tested for selection against the corresponding ancestral source populations that the target groups are assumed to descend from. These should be listed here in order of the ancestry proportion columns of "id.file" (see below) that provide the ancestral source populations' contributions to each target individual. For each `pop.vec` population, AdaptMix will test for (presumed pre-admixture) selection between each source, i.e. as defined by the ancestry proportion columns, and its corresponding `surrogate.vec` whose individuals are defined by the second column of the "id.file" (see below), in addition to testing for selection post-admixture in each `pop.vec`.
+The second row (surrogate.vec) lists the surrogate populations that are to be tested for selection against the corresponding ancestral source populations that the target groups are assumed to descend from. These should be listed here in order of the ancestry proportion columns of "id.file" (see below) that provide the ancestral source populations' contributions to each target individual. For each pop.vec population, AdaptMix will test for (presumed pre-admixture) selection between each source, i.e. as defined by the ancestry proportion columns, and its corresponding surrogate.vec whose individuals are defined by the second column of the "id.file" (see below), in addition to testing for selection post-admixture in each pop.vec.
 
 The third row specifies the bins of expected minor allele frequency (MAF) to use when binning SNPs to calculate drift under a neutral model. I.e. for each target population, drift will be calculated separately for SNPs within each bin. The first value must be 0, the last value 0.5, and values must be sequential in between these. The program will exit with an error message if any target population has no SNPs within one of the bins. For the paper "Disentangling Signatures of Selection Before and After European Colonization in Latin Americans", we set this as "0 0.5", which infers only a single drift value for all SNPs, regardless of their expected MAF. However, we have since updated the program, and we recommend an additional AdaptMix run that makes this as fine as possible (e.g. bins of size 0.01), so long as you have enough data, to eliminate (potentially false) small P-values.
 
@@ -40,15 +40,16 @@ This file contains X rows listing the X files (and their directory locations) th
 
 Each of the files pointed to by "genotypes.input.filenames" should be in ChromoPainter (CP) file format as input, where individuals' haploid genomes are in rows and the columns are SNPs. The first row gives the number of haplotypes in the file, the second row gives the number of SNPs, and the third row a "P" in column 1 with remaining columns the basepair positions of each SNP. The remaining rows are individuals' haploid genomes (with no spaces), with each two consecutive rows an individual. The allowed value for each person's haploid at each SNP is {0,1,?}, where "?" denotes missing data. Though each individual is represented by two rows (i.e. two haplotypes) in CP format, haplotype information is ignored. I.e. you can randomly assign the two alleles for heterozygotes to either row of an individual.
 
-We provide a script to prepare your data starting from a VCF. The example VCF file contains data from Peruvians (`PEL`) from the 1000 Genomes Project as the target admixed population, and `CHB`, `IBS`, and `YRI` as the reference populations. Note that `CHB` is used as a proxy for the Native American reference population.
+We provide a script to prepare your data starting from a VCF. The example VCF file contains data from Peruvians (PEL) from the 1000 Genomes Project as the target admixed population, and CHB, IBS, and YRI as the reference populations. Note that CHB is used as a proxy for the Native American reference population.
 
-We fist split the VCF files by chromosomes and convert to CP format using vcf_to_chromopainter_main.R (from https://github.com/sahwa/vcf_to_chromopainter):
+We fist split the VCF files by chromosomes and convert to CP format using `vcf_to_chrompainter_AdaptMix.R`:
 
 ```
 for chr in {1..22}
 do
-  vcftools --vcf PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --recode --stdout | gzip -c > PEL_REFs_chr${chr}_20K.vcf.gz 
-  vcf_to_chromopainter_main.R -g PEL_REFs_chr${chr}_20K.vcf.gz -o PEL_REFs_chr${chr}_20K.chromopainter.haps -u F
+  vcftools --vcf PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --recode --stdout > PEL_REFs_chr${chr}_20K.vcf 
+  vcf_to_chrompainter_AdaptMix.R.R PEL_REFs_chr${chr}_20K PEL_REFs_chr${chr}_20K
+  gzip PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter.haps
 done
 ```
 
@@ -64,6 +65,8 @@ do
 
 done
 ```
+
+Note that a genetic map is needed as input, but AdaptMix ignores this recombination map.
 
 ## Input File 3: id.file
 

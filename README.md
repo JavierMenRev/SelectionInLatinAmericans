@@ -10,9 +10,11 @@ This repository contains the scripts used to detect and classify signals of sele
 
 ## Running AdaptMix
 
-`AdaptMix` takes four files as input, and is run from a command line in the following way, providing four file names: 
+AdaptMix takes four files as input, and is run from a command line in the following way, providing four file names: 
 
+```
 R < run_AdaptMix.R parameter.input.file genotypes.input.filenames id.file output.file --no-save > screenoutput.out
+```
 
 The first three file names are input files, described below. The last is the output file name. "screenoutput.out" saves any technical output from AdaptMix (with no results) and can be discarded.
 

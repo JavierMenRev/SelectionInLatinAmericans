@@ -92,6 +92,8 @@ Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but yo
 ./admixture PEL_REFs_ALLCHR_20K.bed 3
 ```
 
+We can then use the ADMIXTURE Q output file to create the "id.file" (see above for a description).
+
 Run AdaptMix:
 
 ```

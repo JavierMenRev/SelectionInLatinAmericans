@@ -83,7 +83,8 @@ plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
 ```
 
 ## Run ADMIXTURE 
-Note that we are using ADMIXTURE to estimate ancestry proportions in `PEL`, but you can estimate these proportions using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2).
+
+Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate these proportions using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2).
 
 ```
 ./admixture PEL_REFs_ALLCHR_20K.bed 3

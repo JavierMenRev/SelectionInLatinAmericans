@@ -16,7 +16,6 @@ R < run_AdaptMix.R parameter.input.file genotypes.input.filenames id.file output
 
 The first three file names are input files, described below. The last is the output file name. "screenoutput.out" saves any technical output from AdaptMix (with no results) and can be discarded.
 
-###################################
 ## Input File1:  parameter.input.file
 
 The first input file contains the following 4 rows:
@@ -27,13 +26,12 @@ min.allele.freq.shift: [0.0,...,1.0]
 
 The first row (pop.vec) lists the target populations you wish to test for admixture in. 
 
-The second row (surrogate.vec) lists the surrogate populations that are to be tested for selection against the corresponding ancestral source populations that the target groups are assumed to descend from. These should be listed here in order of the ancestry proportion columns of "id.file" (see below) that provide the ancestral source populations' contributions to each target individual. For each pop.vec population, AdaptMix will test for (presumed pre-admixture) selection between each source, i.e. as defined by the ancestry proportion columns, and its corresponding surrogate.vec whose individuals are defined by the second column of the "id.file" (see below), in addition to testing for selection post-admixture in each pop.vec.
+The second row (surrogate.vec) lists the surrogate populations that are to be tested for selection against the corresponding ancestral source populations that the target groups are assumed to descend from. These should be listed here in order of the ancestry proportion columns of "id.file" (see below) that provide the ancestral source populations' contributions to each target individual. For each `pop.vec` population, AdaptMix will test for (presumed pre-admixture) selection between each source, i.e. as defined by the ancestry proportion columns, and its corresponding `surrogate.vec` whose individuals are defined by the second column of the "id.file" (see below), in addition to testing for selection post-admixture in each `pop.vec`.
 
-The third row specifies the bins of expected minor allele frequency (MAF) to use when binning SNPs to calculate drift under a neutral model. I.e. for each target population, drift will be calculated separately for SNPs within each bin. The first value must be 0, the last value 0.5, and values must be sequential inbetween these. The program will exit with an error message if any target population has no SNPs within one of the bins. For the paper "Disentangling Signatures of Selection Before and After European Colonization in Latin Americans", we set this as "0 0.5", which infers only a single drift value for all SNPs, regardless of their expected MAF. However, we have since updated the program, and we recommend an additional AdaptMix run that makes this as fine as possible (e.g. bins of size .01), so long as you have enough data, to eliminate (potentially false) small p-values.
+The third row specifies the bins of expected minor allele frequency (MAF) to use when binning SNPs to calculate drift under a neutral model. I.e. for each target population, drift will be calculated separately for SNPs within each bin. The first value must be 0, the last value 0.5, and values must be sequential in between these. The program will exit with an error message if any target population has no SNPs within one of the bins. For the paper "Disentangling Signatures of Selection Before and After European Colonization in Latin Americans", we set this as "0 0.5", which infers only a single drift value for all SNPs, regardless of their expected MAF. However, we have since updated the program, and we recommend an additional AdaptMix run that makes this as fine as possible (e.g. bins of size 0.01), so long as you have enough data, to eliminate (potentially false) small P-values.
 
 The fourth row specifies the minimum drift value, translating to the expected (minimum) difference between observed and expected allele frequencies under neutrality. For example, a value of 0.01 indicates that it is normal, assuming neutrality, to have a frequency difference of 0.01 between the observed and expected frequencies. This also helps eliminate false positives for SNPs with low minor allele frequency. Such low MAF SNPs may have low inferred drift values, so that even very small differences between observed and expected frequencies are interpreted as evidence of selection unless a mininum value is set. (Use a very small non-zero value, e.g. 0.00000001, to essentially ignore this.)
 
-#######################################
 ## Input File2: genotypes.input.filenames
 
 This file contains X rows listing the X files (and their directory locations) that contain the genotype data for each target and surrogate individual. For example, this might contain 22 rows corresponding to the 22 chromosomes. 
@@ -65,16 +63,13 @@ do
 done
 ```
 
-################################
 ## Input File 3: id.file
 
 Finally, AdaptMix also requires an id file. This file contains 2+S columns, where S is the number of ancestral populations specified in "surrogate.vec" of the "parameter.input.file" input file above. (E.g. S may be the number of clusters K when running ADMIXTURE.) 
 
 Each row of "id.file" is a person, with column 1 containing their individual ID and column 2 containing their population ID label. These ID labels must match those provided in "pop.vec" and "surrogate.vec" of "parameter.input.file" (though not all labels in column 2 need be among "pop.vec" or "surrogate.vec"). The remaining S columns give the inferred ancestry proportions for each individual (e.g. as inferred by ADMIXTURE), with each column corresponding to the populations -- as ordered -- in surrogate.vec.
 
-#################################
-###########################
-## RUNNING ADMIXTURE TO GET ANCESTRY PROPORTIONS 
+## Running ADMIXTURE to get ancestry proportions
 
 We can convert the VCF file to PLINK format to run ADMIXTURE (output will be needed to run `AdaptMix`):
 
@@ -83,7 +78,7 @@ plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
 ```
 
 ## Run ADMIXTURE 
-Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate these proportions using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2).
+Note that we are using ADMIXTURE to estimate ancestry proportions in `PEL`, but you can estimate these proportions using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2).
 
 ```
 ./admixture PEL_REFs_ALLCHR_20K.bed 3

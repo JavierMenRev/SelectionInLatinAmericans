@@ -21,10 +21,10 @@ The first three file names are input files, described below. The last is the out
 ## Input File 1:  parameter.input.file
 
 The first input file contains the following 4 rows:
-pop.vec: [pop1 pop2 ... pop_K]
-surrogate.vec: [pop_1 pop_2 ... pop_S]
-drift.maf.bins: [0.0 ... 0.5]
-min.allele.freq.shift: [0.0,...,1.0]
+* pop.vec: [pop1 pop2 ... pop_K]
+* surrogate.vec: [pop_1 pop_2 ... pop_S]
+* drift.maf.bins: [0.0 ... 0.5]
+* min.allele.freq.shift: [0.0,...,1.0]
 
 The first row (pop.vec) lists the target populations you wish to test for admixture in. 
 

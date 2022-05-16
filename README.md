@@ -90,7 +90,7 @@ Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but yo
 ./admixture PEL_REFs_ALLCHR_20K.bed 3
 ```
 
-## RUN AdaptMix example:
+## Run AdaptMix example:
 
 ```
 R < run_AdaptMix.R example/PEL_analysis_paramfile.txt example/PEL_REFs_ALLCHR_chr.txt example/PEL_REFs.ids.txt example/PEL_REFs_ALLCHR_adaptmix.txt --no-save > screenoutput.out

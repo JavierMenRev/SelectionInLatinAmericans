@@ -51,7 +51,7 @@ Each row of "id.file" is a person, with column 1 containing their individual ID 
 
 ## Workflow
 
-We provide a script to prepare your data starting from a small VCF. The example VCF file contains data from Peruvians (PEL) from the 1000 Genomes Project as the target admixed population, and Han Chinese (CHB), Spanish (IBS), and Yoruba (YRI) as the reference populations. Note that CHB is used as a proxy for the Native American reference population.
+We provide a script to prepare your data starting from a VCF. The example VCF file contains data from Peruvians (PEL) from the 1000 Genomes Project as the target admixed population, and Han Chinese (CHB), Spanish (IBS), and Yoruba (YRI) as the reference populations. Note that CHB is used as a proxy for the Native American reference population.
 
 We fist split the VCF files by chromosomes and convert to CP format using `vcf_to_chrompainter_AdaptMix.R`:
 

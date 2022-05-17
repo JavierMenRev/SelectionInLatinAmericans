@@ -98,7 +98,7 @@ HG01577 PEL 0.301734 0.650348 0.047919
 Run AdaptMix:
 
 ```
-R < run_AdaptMix.R ./example/PEL_REFs_paramfile.txt ./example/PEL_REFs_genotypes_files.txt ./example/PEL_REFs_ids.txt example/PEL_REFs_ALLCHR_adaptmix.txt --no-save > screenoutput.out
+R < run_AdaptMix.R ./example/PEL_REFs_paramfile.txt ./example/PEL_REFs_genotypes_files.txt ./example/PEL_REFs_ids.txt ./example/PEL_REFs_ALLCHR_adaptmix.txt --no-save > screenoutput.out
 ```
 
 Input arguments:

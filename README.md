@@ -85,7 +85,7 @@ admixture ./example/PEL_REFs_ALLCHR_8KSNPs.bed 3
 
 We can then use ADMIXTURE's Q output file (ancestry proportions) to make the "id.file" (see above). We note again that the ancestry proportions for each individual should correspond to the reference populations -- as ordered -- in surrogate.vec.
 
-Ordering the ancestry proportions as listed in surrogate.vec we get the following estimates for the first 5 individuals:
+Ordering the ancestry proportions as listed in surrogate.vec (see below) we get the following estimates for the first 5 individuals:
 
 ```
 HG01565 PEL 0.699085 0.300905 0.00001
@@ -98,11 +98,11 @@ HG01577 PEL 0.301734 0.650348 0.047919
 Run AdaptMix:
 
 ```
-R < run_AdaptMix.R example/PEL_analysis_paramfile.txt example/PEL_REFs_ALLCHR_chr.txt example/PEL_REFs.ids.txt example/PEL_REFs_ALLCHR_adaptmix.txt --no-save > screenoutput.out
+R < run_AdaptMix.R ./example/PEL_REFs_paramfile.txt ./example/PEL_REFs_genotypes_files.txt ./example/PEL_REFs_ids.txt example/PEL_REFs_ALLCHR_adaptmix.txt --no-save > screenoutput.out
 ```
 
 Input arguments:
-* 1 - Parameter file specifying the target and ancestral populations
+* 1 - Parameter file specifying the target and reference populations
 * 2 - File listing each of the CP genotype files to be used for analysis
 * 3 - ID file
 * 4 - Output file name

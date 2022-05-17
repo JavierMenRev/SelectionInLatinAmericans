@@ -69,32 +69,27 @@ Alternatively, if the data is in haps/sample (SHAPEIT) format, we can convert to
 for chr in {1..22}
 do
   plink2 --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --export haps --out ./example/PEL_REFs_chr${chr}_20K
-
-  perl impute2chromopainter2.pl ./example/PEL_REFs_chr${chr}_20K.haps genetic_map_chr${chr}_combined_b37.20140701.txt ./example/PEL_REFs_chr${chr}_20K.chromopainter
-  gzip PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter.haps
-
+  rm ./example/PEL_REFs_chr${chr}_20K.log
+  
+  perl impute2chromopainter2.pl ./example/PEL_REFs_chr${chr}_20K.haps ./example/genetic_map/genetic_map_chr${chr}_combined_b37.txt ./example/PEL_REFs_chr${chr}_20K.chromopainter
+  gzip ./example/PEL_REFs_chr${chr}_20K.chromopainter.haps
+  rm ./example/PEL_REFs_chr${chr}_20K.haps
+  rm ./example/PEL_REFs_chr${chr}_20K.sample
+  rm ./example/PEL_REFs_chr${chr}_20K.chromopainter.warnings
+  rm ./example/PEL_REFs_chr${chr}_20K.chromopainter.recomrates
 done
 ```
 
-Note that a genetic map is needed as input, but AdaptMix ignores this recombination map.
+The next step is to obtain ancestry proportions for the individuals in the target population. We will illustrate this using ADMIXTURE, but you can estimate these proportions using other approaches e.g. SOURCEFIND (See: https://github.com/sahwa/sourcefindV2).
 
-Running ADMIXTURE to get ancestry proportions:
-
-We can convert the VCF file to PLINK format to run ADMIXTURE (output will be needed to run `AdaptMix`):
+We first convert the VCF files to PLINK format and then run ADMIXTURE using K=3:
 
 ```
-plink --vcf PEL_REFs_ALLCHR_20K.vcf --make-bed --out PEL_REFs_ALLCHR_20K
+plink --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --make-bed --out ./example/PEL_REFs_ALLCHR_20K
+admixture ./example/PEL_REFs_ALLCHR_20K.bed 3
 ```
 
-Run ADMIXTURE:
-
-Note that we are using ADMIXTURE to estimate ancestry proportions in PEL, but you can estimate these proportions using other approaches e.g. SOURCEFIND (https://github.com/sahwa/sourcefindV2).
-
-```
-./admixture PEL_REFs_ALLCHR_20K.bed 3
-```
-
-We can then use the ADMIXTURE Q output file to create the "id.file" (see above for a description).
+We can then use ADMIXTURE's Q output file (ancestry proportions) to make the "id.file" (see above). We note again that the ancestry proportions for each individual should correspond to the reference populations -- as ordered -- in surrogate.vec.
 
 Run AdaptMix:
 

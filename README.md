@@ -49,17 +49,16 @@ Each row of "id.file" is a person, with column 1 containing their individual ID 
 
 ## Workflow
 
-We provide a script to prepare your data starting from a VCF. The example VCF file contains data from Peruvians (PEL) from the 1000 Genomes Project as the target admixed population, and CHB, IBS, and YRI as the reference populations. Note that CHB is used as a proxy for the Native American reference population.
+We provide a script to prepare your data starting from a small VCF. The example VCF file contains data from Peruvians (PEL) from the 1000 Genomes Project as the target admixed population, and Han Chinese (CHB), Spanish (IBS), and Yoruba (YRI) as the reference populations. Note that CHB is used as a proxy for the Native American reference population.
 
 We fist split the VCF files by chromosomes and convert to CP format using `vcf_to_chrompainter_AdaptMix.R`:
 
 ```
 for chr in {1..22}
 do
-  vcftools --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --recode --stdout > ./example/PEL_REFs_chr${chr}_20K.vcf 
-  Rscript vcf_to_chrompainter_AdaptMix.R ./example/PEL_REFs_chr${chr}_20K ./example/PEL_REFs_chr${chr}_20K
-  gzip ./example/PEL_REFs_chr${chr}_20K.chromopainter.haps
-  rm ./example/PEL_REFs_chr${chr}_20K.vcf
+  vcftools --vcf ./example/PEL_REFs_ALLCHR_8KSNPs.vcf --chr ${chr} --recode --stdout > ./example/PEL_REFs_chr${chr}.vcf 
+  Rscript vcf_to_chrompainter_AdaptMix.R ./example/PEL_REFs_chr${chr} ./example/PEL_REFs_chr${chr}
+  gzip ./example/PEL_REFs_chr${chr}.chromopainter.haps
 done
 ```
 
@@ -68,15 +67,10 @@ Alternatively, if the data is in haps/sample (SHAPEIT) format, we can convert to
 ```
 for chr in {1..22}
 do
-  plink2 --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --export haps --out ./example/PEL_REFs_chr${chr}_20K
-  rm ./example/PEL_REFs_chr${chr}_20K.log
+  plink2 --vcf ./example/PEL_REFs_ALLCHR_8KSNPs.vcf --chr ${chr} --export haps --out ./example/PEL_REFs_chr${chr}
   
-  perl impute2chromopainter2.pl ./example/PEL_REFs_chr${chr}_20K.haps ./example/genetic_map/genetic_map_chr${chr}_combined_b37.txt ./example/PEL_REFs_chr${chr}_20K.chromopainter
-  gzip ./example/PEL_REFs_chr${chr}_20K.chromopainter.haps
-  rm ./example/PEL_REFs_chr${chr}_20K.haps
-  rm ./example/PEL_REFs_chr${chr}_20K.sample
-  rm ./example/PEL_REFs_chr${chr}_20K.chromopainter.warnings
-  rm ./example/PEL_REFs_chr${chr}_20K.chromopainter.recomrates
+  perl impute2chromopainter2.pl ./example/PEL_REFs_chr${chr}.haps ./example/genetic_map/genetic_map_chr${chr}_combined_b37.txt ./example/PEL_REFs_chr${chr}.chromopainter
+  gzip ./example/PEL_REFs_chr${chr}.chromopainter.haps
 done
 ```
 
@@ -85,11 +79,21 @@ The next step is to obtain ancestry proportions for the individuals in the targe
 We first convert the VCF files to PLINK format and then run ADMIXTURE using K=3:
 
 ```
-plink --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --make-bed --out ./example/PEL_REFs_ALLCHR_20K
-admixture ./example/PEL_REFs_ALLCHR_20K.bed 3
+plink --vcf ./example/PEL_REFs_ALLCHR_8KSNPs.vcf --make-bed --out ./example/PEL_REFs_ALLCHR_8KSNPs
+admixture ./example/PEL_REFs_ALLCHR_8KSNPs.bed 3
 ```
 
 We can then use ADMIXTURE's Q output file (ancestry proportions) to make the "id.file" (see above). We note again that the ancestry proportions for each individual should correspond to the reference populations -- as ordered -- in surrogate.vec.
+
+Ordering the ancestry proportions as listed in surrogate.vec we get the following estimates for the first 5 individuals:
+
+```
+HG01565 PEL 0.699085 0.300905 0.00001
+HG01566 PEL 0.398061 0.601929 0.00001
+HG01571 PEL 0.713799 0.286191 0.00001
+HG01572 PEL 0.944167 0.055823 0.00001
+HG01577 PEL 0.301734 0.650348 0.047919
+```
 
 Run AdaptMix:
 

@@ -3,8 +3,9 @@ This repository contains the scripts used to detect and classify signals of sele
 
 ## Modules used
 * R/4.0.2
-* plink/1.90b6.16
+* tabix/0.2.6
 * vcftools/0.1.16
+* plink/1.90b6.16
 * plink2/2.00a2
 * perl/5.30.1
 
@@ -55,9 +56,10 @@ We fist split the VCF files by chromosomes and convert to CP format using `vcf_t
 ```
 for chr in {1..22}
 do
-  vcftools --vcf PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --recode --stdout > PEL_REFs_chr${chr}_20K.vcf 
-  vcf_to_chrompainter_AdaptMix.R PEL_REFs_chr${chr}_20K PEL_REFs_chr${chr}_20K
-  gzip PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter.haps
+  vcftools --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --recode --stdout > ./example/PEL_REFs_chr${chr}_20K.vcf 
+  Rscript vcf_to_chrompainter_AdaptMix.R ./example/PEL_REFs_chr${chr}_20K ./example/PEL_REFs_chr${chr}_20K
+  gzip ./example/PEL_REFs_chr${chr}_20K.chromopainter.haps
+  rm ./example/PEL_REFs_chr${chr}_20K.vcf
 done
 ```
 
@@ -66,7 +68,7 @@ Alternatively, if the data is in haps/sample (SHAPEIT) format, we can convert to
 ```
 for chr in {1..22}
 do
-  ./plink2 --vcf PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --export haps --out PEL_REFs_ALLCHR_20K_chr${chr}
+  ./plink2 --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --export haps --out ./example/PEL_REFs_chr${chr}_20K
 
   perl impute2chromopainter2.pl PEL_REFs_ALLCHR_20K_chr${chr}.haps genetic_map_chr${chr}_combined_b37.20140701.txt PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter
   gzip PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter.haps

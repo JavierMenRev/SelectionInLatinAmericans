@@ -68,9 +68,9 @@ Alternatively, if the data is in haps/sample (SHAPEIT) format, we can convert to
 ```
 for chr in {1..22}
 do
-  ./plink2 --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --export haps --out ./example/PEL_REFs_chr${chr}_20K
+  plink2 --vcf ./example/PEL_REFs_ALLCHR_20K.vcf --chr ${chr} --export haps --out ./example/PEL_REFs_chr${chr}_20K
 
-  perl impute2chromopainter2.pl PEL_REFs_ALLCHR_20K_chr${chr}.haps genetic_map_chr${chr}_combined_b37.20140701.txt PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter
+  perl impute2chromopainter2.pl ./example/PEL_REFs_chr${chr}_20K.haps genetic_map_chr${chr}_combined_b37.20140701.txt ./example/PEL_REFs_chr${chr}_20K.chromopainter
   gzip PEL_REFs_ALLCHR_20K_chr${chr}.chromopainter.haps
 
 done

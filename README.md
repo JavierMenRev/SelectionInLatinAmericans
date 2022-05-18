@@ -1,7 +1,7 @@
 # Selection in Latin Americans
 This repository contains the scripts used to detect and classify signals of selection in Latin Americans published in Mendoza-Revilla Javier et al. 2022 
 
-This project was directed by Garrett Hellenthal (University College London) and Andres Ruiz-Linars (Université d'Aix-Marseille). Code developed by Garrett Hellenthal and Javier Mendoza Revilla.
+This project was directed by Garrett Hellenthal (University College London) and Andres Ruiz-Linares (Université d'Aix-Marseille). Code developed by Garrett Hellenthal and Javier Mendoza Revilla.
 
 ## Modules used
 * R/4.0.2

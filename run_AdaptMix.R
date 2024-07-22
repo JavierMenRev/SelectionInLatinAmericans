@@ -400,7 +400,7 @@ close(readfileNAMES)
 
                          ## (VII) PRINT OUT:
 to.print.vec=NULL
-for (k in 1:length(pop.vec)) to.print.vec=c(to.print.vec,paste("log10.pval.target.",k,sep=''),paste("obs.freq.target.",k,sep=''),paste("exp.freq.target.",k,sep=''),paste("AIC.neutral.target.",k,sep=''),paste("AIC.postadmix.target.",k,sep=''),paste("AIC.insurr.source",1:length(surrogate.vec),"target.",k,sep=''),paste("z.target.",k,sep=''),paste("selected.surr.target.",k,sep=''),paste("sel.postadmix.target.",k,sep=''),paste("sel.insurr.source",1:length(surrogate.vec),"target.",k,sep=''))
+for (k in 1:length(pop.vec)) to.print.vec=c(to.print.vec,paste("log10.pval.target.",k,sep=''),paste("obs.freq.target.",k,sep=''),paste("exp.freq.target.",k,sep=''),paste("AIC.neutral.target.",k,sep=''),paste("AIC.postadmix.target.",k,sep=''),paste("AIC.insurr.source",1:length(surrogate.vec),"target.",k,sep=''),paste("z.target.",k,sep=''),paste("sel.scenario.target.",k,sep=''),paste("sel.postadmix.target.",k,sep=''),paste("sel.insurr.source",1:length(surrogate.vec),"target.",k,sep=''))
 drift.maf.bins.label=paste("[",drift.maf.bins[1:(length(drift.maf.bins)-1)],",",drift.maf.bins[2:length(drift.maf.bins)],")",sep='')
 write.table(rbind(c("drift.est",drift.maf.bins.label),cbind(pop.vec,round(drift.est,6))),file=out.file,row.names=FALSE,col.names=FALSE,quote=FALSE)
 write(c("file","pos",to.print.vec),file=out.file,ncolumns=length(to.print.vec)+2,append=TRUE)
@@ -425,9 +425,10 @@ for (k in 1:length(pop.vec)) {
   selfac_insurr_rounded <- round(t(selfac.insurr[k, , ]), round.val.sel)
   
   # Get Z-score
+  min_AIC_insurr_rounded <- apply(AIC_insurr_rounded,1,min) ## lowest AIC across surrogates
   min_col_indices <- apply(AIC_insurr_rounded,1,which.min)
   surrogate.vec_selected <- surrogate.vec[min_col_indices]
-  min_AIC_insurr_rounded <- apply(AIC_insurr_rounded,1,min)
+  sel_scenario <- ifelse(AIC_postadmix_rounded<AIC_postadmix_rounded,pop.vec[k],surrogate.vec_selected)
   z <- exp((pmin(min_AIC_insurr_rounded,AIC_postadmix_rounded)-pmax(min_AIC_insurr_rounded,AIC_postadmix_rounded))/2)
   
   # Combine all the rounded values into a single matrix for the current index k
@@ -439,7 +440,7 @@ for (k in 1:length(pop.vec)) {
     AIC_postadmix_rounded,
     AIC_insurr_rounded,
     z,
-    surrogate.vec_selected,
+    sel_scenario,
     selfac_postadmix_rounded,
     selfac_insurr_rounded
   )

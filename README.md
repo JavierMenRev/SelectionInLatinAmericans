@@ -126,10 +126,12 @@ Following this, the next line contains the header of the output file for the rem
 8 - AIC.insurr.source1target.1 (AIC for SNP being selected in surrogate population 1, = 2-2*log-likelihood(sel.in.pop1))
 9 - AIC.insurr.source2target.1 (AIC for SNP being selected in surrogate population 2, = 2-2*log-likelihood(sel.in.pop2))
 10 - AIC.insurr.source3target.1 (AIC for SNP being selected in surrogate population 3, = 2-2*log-likelihood(sel.in.pop3))
-11 - sel.postadmix.target.1 (selection coefficient for SNP being selected post-admixture)
-12 - sel.insurr.source1target.1 (selection coefficient for SNP being selected in surrogate population 1)
-13 - sel.insurr.source2target.1 (selection coefficient for SNP being selected in surrogate population 2)
-14 - sel.insurr.source3target.1 (selection coefficient for SNP being selected in surrogate population 3)
+11 - I.score.target.1 (I score for SNP indicating the relative evidence for whether selection occurred post-admixture or in one of the surrogates, I = exp(min(min(AIC.insurr.source1target.1,AIC.insurr.source2target.1,AIC.insurr.source3target.1),AIC.postadmix)-max(min(AIC.insurr.source1target.1,AIC.insurr.source2target.1,AIC.insurr.source3target.1),AIC.postadmix)/2))
+12 - sel.scenario.target.1 (population with the lowest AIC)
+13 - sel.postadmix.target.1 (selection coefficient for SNP being selected post-admixture)
+14 - sel.insurr.source1target.1 (selection coefficient for SNP being selected in surrogate population 1)
+15 - sel.insurr.source2target.1 (selection coefficient for SNP being selected in surrogate population 2)
+16 - sel.insurr.source3target.1 (selection coefficient for SNP being selected in surrogate population 3)
 ```
 
 Note that depending on the number of target/surrogate population used the number of columns will be different from that shown here. The above assumes 3 surrogate ("surrogate.vec") populations and one target ("pop.vec") population. 

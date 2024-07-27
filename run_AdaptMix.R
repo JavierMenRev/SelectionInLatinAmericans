@@ -400,7 +400,7 @@ close(readfileNAMES)
 
                          ## (VII) PRINT OUT:
 to.print.vec=NULL
-for (k in 1:length(pop.vec)) to.print.vec=c(to.print.vec,paste("log10.pval.target.",k,sep=''),paste("obs.freq.target.",k,sep=''),paste("exp.freq.target.",k,sep=''),paste("AIC.neutral.target.",k,sep=''),paste("AIC.postadmix.target.",k,sep=''),paste("AIC.insurr.source",1:length(surrogate.vec),"target.",k,sep=''),paste("i.score.target.",k,sep=''),paste("sel.scenario.target.",k,sep=''),paste("sel.postadmix.target.",k,sep=''),paste("sel.insurr.source",1:length(surrogate.vec),"target.",k,sep=''))
+for (k in 1:length(pop.vec)) to.print.vec=c(to.print.vec,paste("log10.pval.target.",k,sep=''),paste("obs.freq.target.",k,sep=''),paste("exp.freq.target.",k,sep=''),paste("AIC.neutral.target.",k,sep=''),paste("AIC.postadmix.target.",k,sep=''),paste("AIC.insurr.source",1:length(surrogate.vec),"target.",k,sep=''),paste("I.score.target.",k,sep=''),paste("sel.scenario.target.",k,sep=''),paste("sel.postadmix.target.",k,sep=''),paste("sel.insurr.source",1:length(surrogate.vec),"target.",k,sep=''))
 drift.maf.bins.label=paste("[",drift.maf.bins[1:(length(drift.maf.bins)-1)],",",drift.maf.bins[2:length(drift.maf.bins)],")",sep='')
 write.table(rbind(c("drift.est",drift.maf.bins.label),cbind(pop.vec,round(drift.est,6))),file=out.file,row.names=FALSE,col.names=FALSE,quote=FALSE)
 write(c("file","pos",to.print.vec),file=out.file,ncolumns=length(to.print.vec)+2,append=TRUE)

@@ -254,7 +254,9 @@ However, an issue with this is that the simulator adds additional drift onto the
 
 ## Worflow
 
-R < AdaptMixSimulator.R simexample/PEL_simulation_paramfile.txt simexample/PEL_REFs_ALLCHR_chr.txt simexample/PEL_REFs.ids.txt simexample/PEL_SIM_ALLCHR --no-save > screenoutput.out
+`R < AdaptMixSimulator.R example/PEL_simulation_paramfile.txt example/PEL_REFs_genotypes_files.txt example/PEL_REFs_ids.txt example/PEL_SIM_ALLCHR --no-save > screenoutput.out`
+
+
 
 
 

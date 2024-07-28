@@ -13,7 +13,7 @@ This project was directed by Garrett Hellenthal (University College London) and 
 
 ## Running AdaptMix
 
-AdaptMix takes four files as input, and is run from a command line in the following way, providing four file names: 
+`AdaptMix` takes four files as input, and is run from a command line in the following way, providing four file names: 
 
 ```
 R < run_AdaptMix.R parameter.input.file genotypes.input.filenames id.file output.file --no-save > screenoutput.out
@@ -21,7 +21,7 @@ R < run_AdaptMix.R parameter.input.file genotypes.input.filenames id.file output
 
 The first three file names are input files, described below. The last is the output file name. "screenoutput.out" saves any technical output from AdaptMix (with no results) and can be discarded.
 
-## Input File 1:  parameter.input.file
+### Input File 1:  parameter.input.file
 
 The first input file contains the following 4 rows:
 * pop.vec: [pop1 pop2 ... pop_K]
@@ -37,13 +37,13 @@ The third row specifies the bins of expected minor allele frequency (MAF) to use
 
 The fourth row specifies the minimum drift value, translating to the expected (minimum) difference between observed and expected allele frequencies under neutrality. For example, a value of 0.01 indicates that it is normal, assuming neutrality, to have a frequency difference of 0.01 between the observed and expected frequencies. This also helps eliminate false positives for SNPs with low minor allele frequency. Such low MAF SNPs may have low inferred drift values, so that even very small differences between observed and expected frequencies are interpreted as evidence of selection unless a mininum value is set. (Use a very small non-zero value, e.g. 0.00000001, to essentially ignore this.)
 
-## Input File 2: genotypes.input.filenames
+### Input File 2: genotypes.input.filenames
 
 This file contains n rows listing the n files (and their directory locations) that contain the genotype data for each target and surrogate individual. For example, this might contain 22 rows corresponding to the 22 chromosomes. 
 
 Each of the files pointed to by "genotypes.input.filenames" should be in ChromoPainter (CP) file format as input, where individuals' haploid genomes are in rows and the columns are SNPs. The first row gives the number of haplotypes in the file, the second row gives the number of SNPs, and the third row a "P" in column 1 with remaining columns the basepair positions of each SNP. The remaining rows are individuals' haploid genomes (with no spaces), with each two consecutive rows an individual. The allowed value for each person's haploid at each SNP is {0,1,?}, where "?" denotes missing data. Though each individual is represented by two rows (i.e. two haplotypes) in CP format, haplotype information is ignored. I.e. you can randomly assign the two alleles for heterozygotes to either row of an individual.
 
-## Input File 3: id.file
+### Input File 3: id.file
 
 This file contains 2+S columns, where S is the number of ancestral populations specified in "surrogate.vec" of the "parameter.input.file" input file above. (E.g. S may be the number of clusters K when running ADMIXTURE.) 
 
@@ -133,6 +133,130 @@ Following this, the next line contains the header of the output file for the rem
 ```
 
 Note that depending on the number of target/surrogate population used the number of columns will be different from that shown here. The above assumes 3 surrogate ("surrogate.vec") populations and one target ("pop.vec") population. 
+
+## AdaptMixSimulator
+
+`AdaptMixSimulator` simulates allele frequencies of a single admixed population using a forward simulator, incorporating selection post-admixture or pre-admixture in one or more of the source populations at a single SNP (randomly chosen from the supplied data -- see below). As with `AdaptMix`, you feed the program real data from a target population (i.e. the population assumed to have experienced selection) and surrogates to each of the sources of that target population. You also specify how well the target population's real sources match each surrogate (i.e. "drift").
+
+The simulator prints out:
+      (a) Genotpye data for each surrogate population (i.e. the real data).
+      (b) Simulated genotype data for the target population.
+
+The program allows for missingness in surrogates and targets, but at least some target individuals and individuals from each surrogate population should be non-missing at each SNP.
+
+### Simulation protocol: 
+
+(A) selection pre-admixture:
+* (A1) sample simulated source population's allele frequencies via beta according to surrogate allele frequencies plus user-defined drift
+* (A2) for simulated source population(s) `k` under selection, for selected SNP forward simulate randomly-mating population of size `N_k` diploids for `G_k` generations with selection (incorporating dominance, etc)
+* (A3) sample admixed individual's data, at selected SNPs + X (user-specified) neutral SNPs, via binomial model according to target individuals' admixture proportions * simulated source population's allele frequencies
+
+(B) selection post-admixture:
+(NOTE: Currently this simulates an equal number of generations `G` of selection in each source pop, and then combines the final frequencies to make the admixed target population. This is likely not ideal, but is what was used in the paper. The challenge is adding selection to an admixed target pop while keeping the admixture proportions of each target individual the same. Another possibility is to simulate one admixed population per target individual, matching that individual's admixture proportions, adding selection to that population and sampling one individual from it, but this is computationally demanding.)
+* (B1) sample simulated source populations' allele frequencies via beta according to surrogate allele frequencies plus drift
+* (B2) at X neutral SNPs, sample admixed individual's data via binomial according to target individuals' admixture proportions * simulated source population's allele frequencies
+* (B3) at selected SNP:
+  * (B3i) forward simulate `K` randomly-mating (source) pops of size `N_k` diploids for `G_k` generations with selection (incorporating dominance, etc) 
+  * (B3ii) sample admixed inds' data via binomial model according to target individuals' admixture proportions * simulated source population's allele frequencies (with no additional added drift)
+
+
+### Running AdaptMixSimulator
+
+`AdaptMixSimulator.R` takes three files as input, and is run from a command line in the following way, providing four file names: 
+
+`R < AdaptMixSimulator.R parameter.input.file genotypes.input.filenames id.file output.filePREFIX --no-save > screenoutput.out`
+
+E.g. using the provided example files: 
+
+`R < AdaptMixSimulator.R simexample/PEL_simulation_paramfile.txt simexample/PEL_REFs_ALLCHR_chr.txt simexample/PEL_REFs.ids.txt simexample/PEL_SIM_ALLCHR --no-save > screenoutput.out`
+
+
+### Input files
+
+The first three file names are input files, described below. The last is the prefix for the output file name. "screenoutput.out" saves any technical output from AdaptMixSimulator (with no results), which may contain some helpful information (see "Strategies" below).
+
+"genotypes.input.filenames" and "id.file" are in the same format as described in "AdaptMix", so we do not describe them here. 
+
+The new file, "parameter.input.file" has the following format:
+
+```selection.post-admixture?: [0,1]
+sel.coeff: [0.0,....]
+sel.type: [additive,dominant,multiplicative,recessive]
+target.pop: [name]
+surrogate.pops: [name1,name2,...]
+sources.with.selection.preadmixture: [0,1]
+generations.selection.each.source: [1,...]
+pop.size.sources: [1,...]
+drift.btwn.surrogates.and.sources: [0.0,...,1.0]
+num.neutral.snps: [1,...]
+max.startfrequency.selected.snp: [0.0,...,1.0]
+infer.source.freq.using.target.data: [0,1]
+divide.into.runs.ofXX.inds(to.reduce.RAM): [1,...]
+```
+
+ALL FIELDS must be entered. 
+
+The first line asks whether post-admixture selection should be simulated (1=YES, 0=simulate pre-admixture selection).
+
+The second line specifies the selection coefficient (s) for the single SNP under selection. Under the various models, this is the increased probability of having offspring per each genotype class (count of selected alleles carried):
+
+``` 
+           	0	1	  2
+additive   	0	s	  2s
+dominant	0	s	  s
+recessive	0	0	  s
+multiplicative	0	s	  s^2+2s
+```
+
+**If you want to simulate all SNPs to have NO selection, choose 0 for `sel.coeff`.**
+
+The third line specifies the model of selection (above) -- choose one. 
+
+The fourth line specifies the target population, which will be matched for individual-specific admixture proportions.  
+
+The fifth line specifies the surrogate populations, whose data will be used to simulate the sources of the target population. 
+
+The sixth line allows you to specify which sources are undergoing pre-admixture selection (`1`=YES, `0`=NO; specify for each surrogate population). NOTE that all sources will be "1" if `selection.post-admixture?: 1`.
+
+The seventh line specifies the number of generations of selection for each source. If selection is post-admixture, the mean of these values is used for each source.
+
+The eighth line specifies the effective population size of each source over time (i.e. `N_k`).
+
+The ninth line specifies the "drift" between each real surrogate population and its corresponding source, i.e. how well the source data likely reflects the surrogate data. (See Strategies below for advice on how to specify this.)
+
+The tenth line specifies the number of neutral SNPs to simulate -- these are based on randomly choosing SNPs across the supplied data. Specify `"all"` to use all the data; in this case all but one SNP (randomly chosen to undergo selection) will be simulated as neutral.
+
+The eleventh line specifies that the SNP chosen to be selected will have starting frequency <= this value for the selected allele. The starting frequency (i.e. before selection begins) is determined by the simulated source allele frequencies.
+
+The twelfth line specifies whether you want to infer source allele frequencies using the target genotype data and admixture proportions. This may take longer to run, but can be useful for determining whether the drift values you specified, i.e. measuring how well each surrogate matches its corresponding source, are appropriate. (See Strategies below.)
+
+The thirteenth (last) line specifies whether to only use a certain number of individuals at a time when simulating. This will slow the program down, but may be necessary if the memory used is high. NOTE: if specifiying `"infer.source.freq.using.target.data: 1"`, memory used may still be high after lowering this number. If that is the case, you can go into the R code and try changing `"snps.perrun"` to a smaller value.
+
+### Output files
+
+Three output files will be produced:
+
+1. <output.filePREFIX>.haps -- new genotype input files for running in AdaptMix
+
+2. <output.filePREFIX>.id -- a new ID input file for running in AdaptMix
+
+3. <output.filePREFIX>.truth -- notes parameters used to simulate
+
+### Strategies
+
+One issue is trying to simulate sources that appropriately match their corresponding surrogates, as this can notably affect the power and interpretation of `AdaptMix`. The parameter to toggle this correlation is `"drift.btwn.surrogates.and.sources"`. 
+
+One way to determine the best values to use is to specify `"infer.source.freq.using.target.data: 1"`, which will use only target data (genotypes and admixture proportions) to infer allele frequencies of each source, using a simple binomial model. You can then find (A) the correlation between each source's inferred allele frequency and its corresponding surrogate. You can compare this correlation to (B) that between each simulated source's allele frequencies and its corresponding surrogate.
+
+After `AdaptMixSimulator` is finished running with `"infer.source.freq.using.target.data: 1"`, the bottom of <screenoutput.out> (e.g. `"pic screenoutput.out"`) will provide these correlations, with `"cor.sims"` corresponding to (B) and `"cor.truth"` corresponding to (A). One strategy then, is to toggle `"drift.btwn.surrogates.and.sources"` until these values align. (Though note that for sources where the admixture fractions overall are small in the admixed target individuals, e.g. "YRI" in the provided example, these values may never align well, as there is too little data to reliably calculate `"cor.truth"`. In such cases, the value of drift is likely less important, as there is little influence -- i.e. admixture -- from this source anyway.)
+
+However, an issue with this is that the simulator adds additional drift onto the targets by simulating their genotypes from a binomial that uses the simulated source frequencies. Therefore, you may want to also ensure that the inferred drift from adaptmix is similar between your real data and your simulated data. See below.
+
+## Worflow
+
+R < AdaptMixSimulator.R simexample/PEL_simulation_paramfile.txt simexample/PEL_REFs_ALLCHR_chr.txt simexample/PEL_REFs.ids.txt simexample/PEL_SIM_ALLCHR --no-save > screenoutput.out
+
+
 
 ## Citation
 Mendoza-Revilla, Javier, et al. "Disentangling signatures of selection before and after European colonization in Latin Americans." Molecular biology and evolution 39.4 (2022): msac076.

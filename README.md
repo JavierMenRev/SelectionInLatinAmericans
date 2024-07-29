@@ -1,3 +1,8 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 # Selection in Latin Americans
 This repository contains the scripts used to detect and classify signals of selection in Latin Americans published in Mendoza-Revilla Javier et al. 2022 
 
@@ -179,7 +184,8 @@ The first three file names are input files, described below. The last is the pre
 
 The new file, "parameter.input.file" has the following format:
 
-```selection.post-admixture?: [0,1]
+```
+selection.post-admixture?: [0,1]
 sel.coeff: [0.0,....]
 sel.type: [additive,dominant,multiplicative,recessive]
 target.pop: [name]
@@ -250,16 +256,86 @@ One way to determine the best values to use is to specify `"infer.source.freq.us
 
 After `AdaptMixSimulator` is finished running with `"infer.source.freq.using.target.data: 1"`, the bottom of <screenoutput.out> (e.g. `"pic screenoutput.out"`) will provide these correlations, with `"cor.sims"` corresponding to (B) and `"cor.truth"` corresponding to (A). One strategy then, is to toggle `"drift.btwn.surrogates.and.sources"` until these values align. (Though note that for sources where the admixture fractions overall are small in the admixed target individuals, e.g. "YRI" in the provided example, these values may never align well, as there is too little data to reliably calculate `"cor.truth"`. In such cases, the value of drift is likely less important, as there is little influence -- i.e. admixture -- from this source anyway.)
 
-However, an issue with this is that the simulator adds additional drift onto the targets by simulating their genotypes from a binomial that uses the simulated source frequencies. Therefore, you may want to also ensure that the inferred drift from adaptmix is similar between your real data and your simulated data. See below.
+However, an issue with this is that the simulator adds additional drift onto the targets by simulating their genotypes from a binomial that uses the simulated source frequencies. Therefore, you may want to also ensure that the inferred drift from `AdapMix` is similar between your real data and your simulated data. See below.
 
 ## Worflow
+
+Below, we outline the workflow for generating a set of neutral SNPs using the forward simulation setting implemented in `AdaptMixSimulator`. In Mendoza-Revilla et al., we used this strategy to estimate a false positive rate (FPR) cutoff, which helped determine whether a given SNP was selected (either pre- or post-admixture). In the `"parameter.input.file"`, we set the `num.neutral.snps parameter` to `"all"` and the `drift.btwn.surrogates.and.sources` parameter to `0.26`, `0.16`, and `0.3`. The example parameter file is shown below.
+
+```
+selection.post-admixture?: 1
+sel.coeff: 0.5
+sel.type: additive
+target.pop: PEL
+surrogate.pops: CHB IBS YRI
+sources.with.selection.preadmixture: 1 0 0
+generations.selection.each.source: 10 0 0
+pop.size.sources: 10000 10000 10000
+drift.btwn.surrogates.and.sources: 0.26 0.16 0.3
+num.neutral.snps: all
+max.startfrequency.selected.snp: 0.5
+infer.source.freq.using.target.data: 1
+divide.into.runs.ofXX.inds(to.reduce.RAM): 700
+```
+
+Then, running `AdaptMixSimulator` with these commands
 
 ```
 R < AdaptMixSimulator.R example/PEL_simulation_paramfile.txt example/PEL_REFs_genotypes_files.txt example/PEL_REFs_ids.txt example/PEL_SIM_ALLCHR --no-save > screenoutput.out
 ```
+will give you at the bottom of `screenoutput.out` estimates similar to these:
+ 
+ ```
+  source drift.val cor.sims cor.truth
+ CHB    0.26      0.9116   0.9114   
+ IBS    0.16      0.9289   0.9271   
+ YRI    0.3       0.864    0.6994   
+```
 
+In this case, the simulated and observed correlations given the drift values are quite similar, except for YRI. As noted above, YRI has contributed little to the admixture process, so modeling the drift may be less important. Note that the specific `drift.btwn.surrogates.and.sources` values may differ greatly from those observed here with your specific dataset, and you may need to adjust these values to find the appropriate settings.
 
+Next, as noted above, we also check that the inferred drift from `AdapMix` is similar between the real data and the simulated data. We first prepare the data and parameters files to run `AdaptMix`:
 
+```
+gzip example/PEL_SIM_ALLCHR.haps
+echo example/PEL_SIM_ALLCHR.haps.gz > example/PEL_SIM_ALLCHR_genotypes_files.txt
+```
+
+Then, we run `AdaptMix`:
+
+```
+R < run_AdaptMix.R example/PEL_REFs_paramfile.txt example/PEL_SIM_ALLCHR_genotypes_files.txt example/PEL_SIM_ALLCHR.idfile.txt example/PEL_SIM_ALLCHR_adaptmix.txt --no-save > screenoutput.out
+```
+
+The header of example/PEL_SIM_ALLCHR_adaptmix.txt shows the following drift estimates:
+
+```
+drift.est [0,0.05) [0.05,0.1) [0.1,0.15) [0.15,0.2) [0.2,0.25) [0.25,0.3) [0.3,0.35) [0.35,0.4) [0.4,0.45) [0.45,0.51)
+PEL 0.000497 0.00875 0.015658 0.019456 0.025934 0.02948 0.03389 0.038473 0.037685 0.041418
+```
+
+which were close to those observed when running `AdaptMix` on the real data:
+
+```
+drift.est [0,0.05) [0.05,0.1) [0.1,0.15) [0.15,0.2) [0.2,0.25) [0.25,0.3) [0.3,0.35) [0.35,0.4) [0.4,0.45) [0.45,0.51)
+PEL 0.0001 0.007029 0.012254 0.016864 0.020187 0.024984 0.024494 0.02731 0.033527 0.035545
+```
+
+We note that the simulated drifts are larger, which will likely make the cutoff more conservative.
+
+Finally, we can estimate a cutoff for the `AdaptMix` scores by reading the output and calculating a quantile.
+
+```
+df <- read.table("example/PEL_SIM_ALLCHR_adaptmix.txt", skip=2, header=TRUE)
+> quantile(df$log10.pval.target.1,probs=c(0.99,0.995,0.999,0.9999))
+     99%    99.5%    99.9%   99.99% 
+1.824360 2.078520 4.877608 9.477474 
+
+```
+
+In Mendoza-Revilla et al., we used a conservative FPR cutoff of `5e-5` (i.e., probs=0.99995), which we deemed appropriate for our dataset, considering the surrogate populations and number of SNPs tested.
+
+As in our study, based on the estimated drifts and a given FPR for your specific dataset, it is possible to estimate the power to detect selection given a specified selection coefficient, as well as to correctly assign a selection scenario (i.e., selection pre- or post-admixture). We note that in our study, only SNPs with an estimated FPR cutoff of `5e-5` were considered selected. We classified these SNPs as either pre- or post-admixture only if the I-score (see above) was lower than `0.001`.
 
 ## Citation
 Mendoza-Revilla, Javier, et al. "Disentangling signatures of selection before and after European colonization in Latin Americans." Molecular biology and evolution 39.4 (2022): msac076.

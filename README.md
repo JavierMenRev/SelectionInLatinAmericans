@@ -164,12 +164,15 @@ The program allows for missingness in surrogates and targets, but at least some 
 
 `AdaptMixSimulator.R` takes three files as input, and is run from a command line in the following way, providing four file names: 
 
-`R < AdaptMixSimulator.R parameter.input.file genotypes.input.filenames id.file output.filePREFIX --no-save > screenoutput.out`
+```
+R < AdaptMixSimulator.R parameter.input.file genotypes.input.filenames id.file output.filePREFIX --no-save > screenoutput.out
+```
 
 E.g. using the provided example files: 
 
-`R < AdaptMixSimulator.R simexample/PEL_simulation_paramfile.txt simexample/PEL_REFs_ALLCHR_chr.txt simexample/PEL_REFs.ids.txt simexample/PEL_SIM_ALLCHR --no-save > screenoutput.out`
-
+```
+R < AdaptMixSimulator.R example/PEL_simulation_paramfile.txt example/PEL_REFs_ALLCHR_chr.txt example/PEL_REFs.ids.txt example/PEL_SIM_ALLCHR --no-save > screenoutput.out
+```
 
 ### Input files
 

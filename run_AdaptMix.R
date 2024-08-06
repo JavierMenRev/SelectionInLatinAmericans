@@ -400,13 +400,57 @@ close(readfileNAMES)
 
                          ## (VII) PRINT OUT:
 to.print.vec=NULL
-for (k in 1:length(pop.vec)) to.print.vec=c(to.print.vec,paste("log10.pval.target.",k,sep=''),paste("obs.freq.target.",k,sep=''),paste("exp.freq.target.",k,sep=''),paste("AIC.neutral.target.",k,sep=''),paste("AIC.postadmix.target.",k,sep=''),paste("AIC.insurr.source",1:length(surrogate.vec),"target.",k,sep=''),paste("sel.postadmix.target.",k,sep=''),paste("sel.insurr.source",1:length(surrogate.vec),"target.",k,sep=''))
+for (k in 1:length(pop.vec)) to.print.vec=c(to.print.vec,paste("log10.pval.target.",k,sep=''),paste("obs.freq.target.",k,sep=''),paste("exp.freq.target.",k,sep=''),paste("AIC.neutral.target.",k,sep=''),paste("AIC.postadmix.target.",k,sep=''),paste("AIC.insurr.source",1:length(surrogate.vec),"target.",k,sep=''),paste("I.score.target.",k,sep=''),paste("sel.scenario.target.",k,sep=''),paste("sel.postadmix.target.",k,sep=''),paste("sel.insurr.source",1:length(surrogate.vec),"target.",k,sep=''))
 drift.maf.bins.label=paste("[",drift.maf.bins[1:(length(drift.maf.bins)-1)],",",drift.maf.bins[2:length(drift.maf.bins)],")",sep='')
 write.table(rbind(c("drift.est",drift.maf.bins.label),cbind(pop.vec,round(drift.est,6))),file=out.file,row.names=FALSE,col.names=FALSE,quote=FALSE)
 write(c("file","pos",to.print.vec),file=out.file,ncolumns=length(to.print.vec)+2,append=TRUE)
-to.print.mat=NULL
-for (k in 1:length(pop.vec)) to.print.mat=cbind(to.print.mat,round(pval.mat[k,],round.val),round(obs.count[k,]/n.count[k,],round.val.freq),round(exp.freq.pop.k[k,],round.val.freq),round(AIC.neutral[k,],round.val),round(AIC.postadmix[k,],round.val),round(t(AIC.insurr[k,,]),round.val),round(selfac.postadmix[k,],round.val.sel),round(t(selfac.insurr[k,,]),round.val.sel))
+# to.print.mat=NULL
+# for (k in 1:length(pop.vec)) to.print.mat=cbind(to.print.mat,round(pval.mat[k,],round.val),round(obs.count[k,]/n.count[k,],round.val.freq),round(exp.freq.pop.k[k,],round.val.freq),round(AIC.neutral[k,],round.val),round(AIC.postadmix[k,],round.val),round(t(AIC.insurr[k,,]),round.val),round(selfac.postadmix[k,],round.val.sel),round(t(selfac.insurr[k,,]),round.val.sel))
+# write.table(cbind(chromo.vec.final,pos.vec.final,to.print.mat),file=out.file,row.names=F,col.names=F,quote=F,append=TRUE)	
+
+# Initialize the matrix to store the results
+to.print.mat <- NULL
+
+# Loop through each element in pop.vec
+for (k in 1:length(pop.vec)) {
+  
+  # Extract and round the relevant values for the current index k
+  pval_rounded <- round(pval.mat[k, ], round.val)
+  obs_freq_rounded <- round(obs.count[k, ] / n.count[k, ], round.val.freq)
+  exp_freq_rounded <- round(exp.freq.pop.k[k, ], round.val.freq)
+  AIC_neutral_rounded <- round(AIC.neutral[k, ], round.val)
+  AIC_postadmix_rounded <- round(AIC.postadmix[k, ], round.val)
+  AIC_insurr_rounded <- round(t(AIC.insurr[k, , ]), round.val)
+  selfac_postadmix_rounded <- round(selfac.postadmix[k, ], round.val.sel)
+  selfac_insurr_rounded <- round(t(selfac.insurr[k, , ]), round.val.sel)
+  
+  # Get I-score
+  min_AIC_insurr_rounded <- apply(AIC_insurr_rounded,1,min) ## lowest AIC across surrogates
+  min_col_indices <- apply(AIC_insurr_rounded,1,which.min)
+  surrogate.vec_selected <- surrogate.vec[min_col_indices]
+  sel_scenario <- ifelse(AIC_postadmix_rounded<min_AIC_insurr_rounded,pop.vec[k],surrogate.vec_selected)
+  i_score <- exp((pmin(min_AIC_insurr_rounded,AIC_postadmix_rounded)-pmax(min_AIC_insurr_rounded,AIC_postadmix_rounded))/2)
+  
+  # Combine all the rounded values into a single matrix for the current index k
+  current_matrix <- cbind(
+    pval_rounded,
+    obs_freq_rounded,
+    exp_freq_rounded,
+    AIC_neutral_rounded,
+    AIC_postadmix_rounded,
+    AIC_insurr_rounded,
+    i_score,
+    sel_scenario,
+    selfac_postadmix_rounded,
+    selfac_insurr_rounded
+  )
+  
+  # Combine
+  to.print.mat <- cbind(to.print.mat, current_matrix)
+}
+
 write.table(cbind(chromo.vec.final,pos.vec.final,to.print.mat),file=out.file,row.names=F,col.names=F,quote=F,append=TRUE)	
+
 
 print("Finished!")
 

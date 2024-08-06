@@ -256,7 +256,7 @@ After `AdaptMixSimulator` is finished running with `"infer.source.freq.using.tar
 
 However, an issue with this is that the simulator adds additional drift onto the targets by simulating their genotypes from a binomial that uses the simulated source frequencies. Therefore, you may want to also ensure that the inferred drift from `AdapMix` is similar between your real data and your simulated data. See below.
 
-## Worflow
+## Workflow
 
 Below, we outline the workflow for generating a set of neutral SNPs using the forward simulation setting implemented in `AdaptMixSimulator`. In Mendoza-Revilla et al., we used this strategy to estimate a false positive rate (FPR) cutoff, which helped determine whether a given SNP was selected (either pre- or post-admixture). In the `"parameter.input.file"`, we set the `num.neutral.snps parameter` to `"all"` and the `drift.btwn.surrogates.and.sources` parameter to `0.26`, `0.16`, and `0.3`. The example parameter file is shown below.
 

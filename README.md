@@ -1,5 +1,5 @@
 # Selection in Latin Americans
-This repository contains the scripts used to detect and classify signals of selection in Latin Americans published in Mendoza-Revilla Javier et al. 2022 
+This repository contains the scripts used to detect and classify signals of selection in Latin Americans published in Mendoza-Revilla Javier et al. 2022
 
 This project was directed by Garrett Hellenthal (University College London) and Andres Ruiz-Linares (Université d'Aix-Marseille). Code developed by Garrett Hellenthal and Javier Mendoza Revilla.
 
@@ -13,7 +13,7 @@ This project was directed by Garrett Hellenthal (University College London) and 
 
 ## Running AdaptMix
 
-`AdaptMix` takes four files as input, and is run from a command line in the following way, providing four file names: 
+`AdaptMix` takes four files as input, and is run from a command line in the following way, providing four file names:
 
 ```
 R < run_AdaptMix.R parameter.input.file genotypes.input.filenames id.file output.file --no-save > screenoutput.out
@@ -29,7 +29,7 @@ The first input file contains the following 4 rows:
 * drift.maf.bins: [0.0 ... 0.5]
 * min.allele.freq.shift: [0.0,...,1.0]
 
-The first row (pop.vec) lists the target populations you wish to test for admixture in. 
+The first row (pop.vec) lists the target populations you wish to test for admixture in.
 
 The second row (surrogate.vec) lists the surrogate populations that are to be tested for selection against the corresponding ancestral source populations that the target groups are assumed to descend from. These should be listed here in order of the ancestry proportion columns of "id.file" (see below) that provide the ancestral source populations' contributions to each target individual. For each pop.vec population, AdaptMix will test for (presumed pre-admixture) selection between each source, i.e. as defined by the ancestry proportion columns, and its corresponding surrogate.vec whose individuals are defined by the second column of the "id.file" (see below), in addition to testing for selection post-admixture in each pop.vec.
 
@@ -39,13 +39,13 @@ The fourth row specifies the minimum drift value, translating to the expected (m
 
 ### Input File 2: genotypes.input.filenames
 
-This file contains n rows listing the n files (and their directory locations) that contain the genotype data for each target and surrogate individual. For example, this might contain 22 rows corresponding to the 22 chromosomes. 
+This file contains n rows listing the n files (and their directory locations) that contain the genotype data for each target and surrogate individual. For example, this might contain 22 rows corresponding to the 22 chromosomes.
 
 Each of the files pointed to by "genotypes.input.filenames" should be in ChromoPainter (CP) file format as input, where individuals' haploid genomes are in rows and the columns are SNPs. The first row gives the number of haplotypes in the file, the second row gives the number of SNPs, and the third row a "P" in column 1 with remaining columns the basepair positions of each SNP. The remaining rows are individuals' haploid genomes (with no spaces), with each two consecutive rows an individual. The allowed value for each person's haploid at each SNP is {0,1,?}, where "?" denotes missing data. Though each individual is represented by two rows (i.e. two haplotypes) in CP format, haplotype information is ignored. I.e. you can randomly assign the two alleles for heterozygotes to either row of an individual.
 
 ### Input File 3: id.file
 
-This file contains 2+S columns, where S is the number of ancestral populations specified in "surrogate.vec" of the "parameter.input.file" input file above. (E.g. S may be the number of clusters K when running ADMIXTURE.) 
+This file contains 2+S columns, where S is the number of ancestral populations specified in "surrogate.vec" of the "parameter.input.file" input file above. (E.g. S may be the number of clusters K when running ADMIXTURE.)
 
 Each row of "id.file" is a person, with column 1 containing their individual ID and column 2 containing their population ID label. These ID labels must match those provided in "pop.vec" and "surrogate.vec" of "parameter.input.file" (though not all labels in column 2 need be among "pop.vec" or "surrogate.vec"). The remaining S columns give the inferred ancestry proportions for each individual (e.g. as inferred by ADMIXTURE), with each column corresponding to the populations -- as ordered -- in surrogate.vec.
 
@@ -58,7 +58,7 @@ We fist split the VCF files by chromosomes and convert to CP format using `vcf_t
 ```
 for chr in {1..22}
 do
-  vcftools --vcf ./example/PEL_REFs_ALLCHR_8KSNPs.vcf --chr ${chr} --recode --stdout > ./example/PEL_REFs_chr${chr}.vcf 
+  vcftools --vcf ./example/PEL_REFs_ALLCHR_8KSNPs.vcf --chr ${chr} --recode --stdout > ./example/PEL_REFs_chr${chr}.vcf
   Rscript vcf_to_chrompainter_AdaptMix.R ./example/PEL_REFs_chr${chr} ./example/PEL_REFs_chr${chr}
   gzip ./example/PEL_REFs_chr${chr}.chromopainter.haps
 done
@@ -70,7 +70,7 @@ Alternatively, if the data is in haps/sample (SHAPEIT) format, we can convert to
 for chr in {1..22}
 do
   plink2 --vcf ./example/PEL_REFs_ALLCHR_8KSNPs.vcf --chr ${chr} --export haps --out ./example/PEL_REFs_chr${chr}
-  
+
   perl impute2chromopainter2.pl ./example/PEL_REFs_chr${chr}.haps ./example/genetic_map/genetic_map_chr${chr}_combined_b37.txt ./example/PEL_REFs_chr${chr}.chromopainter
   gzip ./example/PEL_REFs_chr${chr}.chromopainter.haps
 done
@@ -132,7 +132,7 @@ Following this, the next line contains the header of the output file for the rem
 14 - sel.insurr.source3target.1 (selection coefficient for SNP being selected in surrogate population 3)
 ```
 
-Note that depending on the number of target/surrogate population used the number of columns will be different from that shown here. The above assumes 3 surrogate ("surrogate.vec") populations and one target ("pop.vec") population. 
+Note that depending on the number of target/surrogate population used the number of columns will be different from that shown here. The above assumes 3 surrogate ("surrogate.vec") populations and one target ("pop.vec") population.
 
 ## AdaptMixSimulator
 
@@ -144,7 +144,7 @@ The simulator prints out:
 
 The program allows for missingness in surrogates and targets, but at least some target individuals and individuals from each surrogate population should be non-missing at each SNP.
 
-### Simulation protocol: 
+### Simulation protocol:
 
 (A) selection pre-admixture:
 * (A1) sample simulated source population's allele frequencies via beta according to surrogate allele frequencies plus user-defined drift
@@ -156,19 +156,19 @@ The program allows for missingness in surrogates and targets, but at least some 
 * (B1) sample simulated source populations' allele frequencies via beta according to surrogate allele frequencies plus drift
 * (B2) at X neutral SNPs, sample admixed individual's data via binomial according to target individuals' admixture proportions * simulated source population's allele frequencies
 * (B3) at selected SNP:
-  * (B3i) forward simulate `K` randomly-mating (source) pops of size `N_k` diploids for `G_k` generations with selection (incorporating dominance, etc) 
+  * (B3i) forward simulate `K` randomly-mating (source) pops of size `N_k` diploids for `G_k` generations with selection (incorporating dominance, etc)
   * (B3ii) sample admixed inds' data via binomial model according to target individuals' admixture proportions * simulated source population's allele frequencies (with no additional added drift)
 
 
 ### Running AdaptMixSimulator
 
-`AdaptMixSimulator.R` takes three files as input, and is run from a command line in the following way, providing four file names: 
+`AdaptMixSimulator.R` takes three files as input, and is run from a command line in the following way, providing four file names:
 
 ```
 R < AdaptMixSimulator.R parameter.input.file genotypes.input.filenames id.file output.filePREFIX --no-save > screenoutput.out
 ```
 
-E.g. using the provided example files: 
+E.g. using the provided example files:
 
 ```
 R < AdaptMixSimulator.R example/PEL_simulation_paramfile.txt example/PEL_REFs_ALLCHR_chr.txt example/PEL_REFs.ids.txt example/PEL_SIM_ALLCHR --no-save > screenoutput.out
@@ -178,7 +178,7 @@ R < AdaptMixSimulator.R example/PEL_simulation_paramfile.txt example/PEL_REFs_AL
 
 The first three file names are input files, described below. The last is the prefix for the output file name. "screenoutput.out" saves any technical output from AdaptMixSimulator (with no results), which may contain some helpful information (see "Strategies" below).
 
-"genotypes.input.filenames" and "id.file" are in the same format as described in "AdaptMix", so we do not describe them here. 
+"genotypes.input.filenames" and "id.file" are in the same format as described in "AdaptMix", so we do not describe them here.
 
 The new file, "parameter.input.file" has the following format:
 
@@ -198,13 +198,13 @@ infer.source.freq.using.target.data: [0,1]
 divide.into.runs.ofXX.inds(to.reduce.RAM): [1,...]
 ```
 
-ALL FIELDS must be entered. 
+ALL FIELDS must be entered.
 
 The first line asks whether post-admixture selection should be simulated (1=YES, 0=simulate pre-admixture selection).
 
 The second line specifies the selection coefficient (s) for the single SNP under selection. Under the various models, this is the increased probability of having offspring per each genotype class (count of selected alleles carried):
 
-``` 
+```
            	0	1	  2
 additive   	0	s	  2s
 dominant	0	s	  s
@@ -214,11 +214,11 @@ multiplicative	0	s	  s^2+2s
 
 **If you want to simulate all SNPs to have NO selection, choose 0 for `sel.coeff`.**
 
-The third line specifies the model of selection (above) -- choose one. 
+The third line specifies the model of selection (above) -- choose one.
 
 The fourth line specifies the target population, which will be matched for individual-specific admixture proportions.  
 
-The fifth line specifies the surrogate populations, whose data will be used to simulate the sources of the target population. 
+The fifth line specifies the surrogate populations, whose data will be used to simulate the sources of the target population. These must be listed here in order of the ancestry proportion columns of "id.file" that provide the ancestral source populations' contributions to each target individual.
 
 The sixth line allows you to specify which sources are undergoing pre-admixture selection (`1`=YES, `0`=NO; specify for each surrogate population). NOTE that all sources will be "1" if `selection.post-admixture?: 1`.
 
@@ -248,7 +248,7 @@ Three output files will be produced:
 
 ### Strategies
 
-One issue is trying to simulate sources that appropriately match their corresponding surrogates, as this can notably affect the power and interpretation of `AdaptMix`. The parameter to toggle this correlation is `"drift.btwn.surrogates.and.sources"`. 
+One issue is trying to simulate sources that appropriately match their corresponding surrogates, as this can notably affect the power and interpretation of `AdaptMix`. The parameter to toggle this correlation is `"drift.btwn.surrogates.and.sources"`.
 
 One way to determine the best values to use is to specify `"infer.source.freq.using.target.data: 1"`, which will use only target data (genotypes and admixture proportions) to infer allele frequencies of each source, using a simple binomial model. You can then find (A) the correlation between each source's inferred allele frequency and its corresponding surrogate. You can compare this correlation to (B) that between each simulated source's allele frequencies and its corresponding surrogate.
 
@@ -282,7 +282,7 @@ Then, running `AdaptMixSimulator` with these commands
 R < AdaptMixSimulator.R example/PEL_simulation_paramfile.txt example/PEL_REFs_genotypes_files.txt example/PEL_REFs_ids.txt example/PEL_SIM_ALLCHR --no-save > screenoutput.out
 ```
 will give you at the bottom of `screenoutput.out` estimates similar to these:
- 
+
  ```
   source drift.val cor.sims cor.truth
  CHB    0.26      0.9116   0.9114   
@@ -326,8 +326,8 @@ Finally, we can estimate a cutoff for the `AdaptMix` scores by reading the outpu
 ```
 df <- read.table("example/PEL_SIM_ALLCHR_adaptmix.txt", skip=2, header=TRUE)
 > quantile(df$log10.pval.target.1,probs=c(0.99,0.995,0.999,0.9999))
-     99%    99.5%    99.9%   99.99% 
-1.824360 2.078520 4.877608 9.477474 
+     99%    99.5%    99.9%   99.99%
+1.824360 2.078520 4.877608 9.477474
 
 ```
 
